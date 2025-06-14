@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "MyTTV",
+  "version": "1.0",
+  "description": "Ajoute une liste de chaînes Twitch favorites dans la sidebar.",
+  "content_scripts": [
+    {
+      "matches": ["*://*.twitch.tv/*"],
+      "js": [
+        "utils.js",
+        "favorites.js",
+        "styles.js",
+        "sidebar.js",
+        "button.js",
+        "content.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "permissions": ["storage"],
+  "icons": {
+    "48": "./src/icon48.png"
+  }
+}
