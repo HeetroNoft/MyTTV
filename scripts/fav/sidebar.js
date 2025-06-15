@@ -12,13 +12,26 @@ window.injectSidebarFavorites = function () {
   block.style.padding = "0";
   block.innerHTML = `
     <div style="display:flex;align-items:center;margin-bottom:8px;margin-left:10px;gap:6px;">
-      <span id="myttv-fav-title-icon" style="display:inline;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#9147ff" xmlns="http://www.w3.org/2000/svg"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-      </span>
+      <div class="InjectLayout-sc-1i43xsx-0 iDMNUO" >
+        <div class="Layout-sc-1xcs6mc-0 " data-a-target="side-nav-header-collapsed" role="heading" aria-level="3">
+          <div style="margin-left:5px;" class="ScSvgWrapper-sc-wkgzod-0 dKXial tw-svg" id="myttv-fav-title-icon">
+            <svg id="myttv-fav-title-svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--color-text-alt-2)" xmlns="http://www.w3.org/2000/svg" style="color:inherit;"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </div>
+        </div>
+      </div>
       <span class="gLNOIm" id="myttv-fav-title-text">Mes favoris</span>
     </div>
     <div id="myttv-favs-list"></div>
   `;
+  // Synchronise la couleur de l'icône avec celle du texte du titre
+  setTimeout(() => {
+    const text = block.querySelector("#myttv-fav-title-text");
+    const svg = block.querySelector("#myttv-fav-title-svg");
+    if (text && svg) {
+      const color = getComputedStyle(text).color;
+      svg.style.color = color;
+    }
+  }, 0);
   if (sidebar.children.length >= 2) {
     sidebar.insertBefore(block, sidebar.children[2]);
   } else {
@@ -189,124 +202,43 @@ window.renderSidebarFavoritesList = async function (
   }
 };
 
+// SUPPRESSION DU FLAG window.myttvSidebarManualUpdate ET SYNCHRONISATION DE LA LISTE
+
 window.addSidebarFavorite = async function (name) {
-  window.myttvSidebarManualUpdate = true;
   const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
   const block = document.getElementById("myttv-sidebar-favs");
   if (!sidebar || !block) return;
-  const list = block.querySelector("#myttv-favs-list");
-  if (!list) return;
-  // Ne pas ajouter si déjà présent
-  if (list.querySelector(`[data-myttv-fav="${name}"]`)) return;
-  // Récupère les infos du favori
-  try {
-    const [avatarRes, liveRes, viewersRes, gameRes] = await Promise.all([
-      fetch(`https://decapi.me/twitch/avatar/${name}`),
-      fetch(`https://decapi.me/twitch/uptime/${name}`),
-      fetch(`https://decapi.me/twitch/viewercount/${name}`),
-      fetch(`https://decapi.me/twitch/game/${name}`),
-    ]);
-    const avatar = await avatarRes.text();
-    const uptimeText = liveRes.ok ? (await liveRes.text()).trim() : "";
-    const isLive =
-      uptimeText && !uptimeText.toLowerCase().includes("is offline");
-    const viewers = viewersRes.ok ? (await viewersRes.text()).trim() : "";
-    const game = gameRes.ok ? (await gameRes.text()).trim() : "";
-    const sidebarWidth = sidebar.offsetWidth;
-    let html = "";
-    if (sidebarWidth <= 55) {
-      html = `<div data-myttv-fav="${name}" class="ScTransitionBase-sc-hx4quq-0 jaUBmE tw-transition" aria-hidden="false" style="transition-property: transform, opacity; transition-timing-function: ease;">
-        <div>
-          <div class="Layout-sc-1xcs6mc-0 AoXTY side-nav-card">
-            <a aria-haspopup="dialog" class="ScCoreLink-sc-16kq0mq-0 fytYW InjectLayout-sc-1i43xsx-0 eTNPYC side-nav-card tw-link" href="/${name}">
-              <div class="Layout-sc-1xcs6mc-0 kErOMx side-nav-card__avatar">
-                <div class="ScAvatar-sc-144b42z-0 dLsNfm tw-avatar">
-                  <img class="InjectLayout-sc-1i43xsx-0 fAYJcN tw-image tw-image-avatar${
-                    isLive ? "" : " myttv-avatar-offline"
-                  }" alt="" src="${avatar}" style="object-fit: cover;">
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>`;
-    } else {
-      html = `<div data-myttv-fav="${name}" class="ScTransitionBase-sc-hx4quq-0 jaUBmE tw-transition" aria-hidden="false" style="transition-property: transform, opacity; transition-timing-function: ease;">
-      <div>
-        <div class="Layout-sc-1xcs6mc-0 AoXTY side-nav-card">
-          <a aria-haspopup="dialog" class="ScCoreLink-sc-16kq0mq-0 fytYW InjectLayout-sc-1i43xsx-0 fxorZp side-nav-card__link tw-link" href="/${name}">
-            <div class="Layout-sc-1xcs6mc-0 kErOMx side-nav-card__avatar">
-              <div class="ScAvatar-sc-144b42z-0 dLsNfm tw-avatar">
-                <img class="InjectLayout-sc-1i43xsx-0 fAYJcN tw-image tw-image-avatar${
-                  isLive ? "" : " myttv-avatar-offline"
-                }" alt="" src="${avatar}" style="object-fit: cover;">
-              </div>
-            </div>
-            <div class="Layout-sc-1xcs6mc-0 BkJwo">
-              <div class="Layout-sc-1xcs6mc-0 dJfBsr">
-                <div data-a-target="side-nav-card-metadata" class="Layout-sc-1xcs6mc-0 ffUuNa">
-                  <div class="Layout-sc-1xcs6mc-0 kvrzxX side-nav-card__title">
-                    <p style="text-transform: uppercase;" title="${name}" data-a-target="side-nav-title" class="CoreText-sc-1txzju1-0 deIppZ InjectLayout-sc-1i43xsx-0 hnBAak">${name}</p>
-                  </div>
-                  ${
-                    isLive && game
-                      ? `<div class=\"Layout-sc-1xcs6mc-0 hZXGWn side-nav-card__metadata\" data-a-target=\"side-nav-game-title\"><p title=\"${game}\" class=\"CoreText-sc-1txzju1-0 catJxV\">${game}</p></div>`
-                      : ""
-                  }
-                </div>
-                <div class=\"Layout-sc-1xcs6mc-0 jxYIBi side-nav-card__live-status\" data-a-target=\"side-nav-live-status\"><div class=\"Layout-sc-1xcs6mc-0 kvrzxX\">
-                  ${
-                    isLive
-                      ? '<div class="ScChannelStatusIndicator-sc-bjn067-0 fJwlvq tw-channel-status-indicator"></div>'
-                      : ""
-                  }
-                  <p class=\"CoreText-sc-1txzju1-0 InjectLayout-sc-1i43xsx-0 cdydzE\">${
-                    isLive ? "Live" : "Déconnecté(e)"
-                  }</p>
-                  <div class=\"Layout-sc-1xcs6mc-0 lnazSn\">
-                    <span aria-hidden=\"true\" class=\"CoreText-sc-1txzju1-0 kyIlCg\">${
-                      isLive ? viewers : ""
-                    }</span>
-                    <p class=\"CoreText-sc-1txzju1-0 InjectLayout-sc-1i43xsx-0 cdydzE\">${
-                      isLive ? viewers + " spectateurs" : "Déconnecté(e)"
-                    }</p>
-                  </div>
-                </div></div>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-    </div>`;
-    }
-    list.insertAdjacentHTML("beforeend", html);
-  } catch (e) {
-    // ignore
+  // Ajoute le favori à la source (localStorage ou autre via window.addFavorite)
+  if (typeof window.addFavorite === "function") {
+    window.addFavorite(name, () => {
+      // Après ajout, on recharge la liste depuis la source
+      window.getFavorites((favs) => {
+        window.renderSidebarFavoritesList(
+          block,
+          favs,
+          sidebar.offsetWidth,
+          true
+        );
+      });
+    });
   }
-  window.myttvSidebarManualUpdate = false;
 };
 
 window.removeSidebarFavorite = function (name) {
-  window.myttvSidebarManualUpdate = true;
   const block = document.getElementById("myttv-sidebar-favs");
   if (!block) return;
-  const list = block.querySelector("#myttv-favs-list");
-  if (!list) return;
-  // Supprime tous les blocs correspondant à ce favori (même si imbriqué)
-  list
-    .querySelectorAll(`[data-myttv-fav="${name}"]`)
-    .forEach((el) => el.remove());
-  // Si la liste est vide après suppression, affiche le message
-  if (!list.querySelector("[data-myttv-fav]")) {
-    list.innerHTML =
-      '<div style="color:#aaa;font-size:13px;">Aucune chaîne</div>';
+  // Retire le favori de la source (localStorage ou autre via window.removeFavorite)
+  if (typeof window.removeFavorite === "function") {
+    window.removeFavorite(name, () => {
+      // Après suppression, on recharge la liste depuis la source
+      window.getFavorites((favs) => {
+        window.renderSidebarFavoritesList(
+          block,
+          favs,
+          block.parentElement.offsetWidth,
+          true
+        );
+      });
+    });
   }
-  window.myttvSidebarManualUpdate = false;
-};
-
-// Patch dans renderSidebarFavoritesList et updateIconVisibility pour ne rien faire si myttvSidebarManualUpdate est true
-const oldRenderSidebarFavoritesList = window.renderSidebarFavoritesList;
-window.renderSidebarFavoritesList = function (...args) {
-  if (window.myttvSidebarManualUpdate) return;
-  return oldRenderSidebarFavoritesList.apply(this, args);
 };
