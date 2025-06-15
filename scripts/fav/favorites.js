@@ -1,5 +1,6 @@
 // favorites.js
 const STORAGE_KEY = "myttv_favs";
+const AVATAR_CACHE_KEY = "myttv_favs_avatars";
 
 window.getFavorites = function (cb) {
   chrome.storage.local.get([STORAGE_KEY], (result) => {
@@ -16,8 +17,24 @@ window.removeFavorite = function (name, cb) {
     const newFavs = favs.filter(
       (fav) => fav.toLowerCase() !== name.toLowerCase()
     );
-    window.setFavorites(newFavs, cb);
+    // Supprimer l'avatar du cache
+    window.getAvatarCache((cache) => {
+      delete cache[name.toLowerCase()];
+      window.setAvatarCache(cache, () => {
+        window.setFavorites(newFavs, cb);
+      });
+    });
   });
+};
+
+window.getAvatarCache = function (cb) {
+  chrome.storage.local.get([AVATAR_CACHE_KEY], (result) => {
+    cb(result[AVATAR_CACHE_KEY] || {});
+  });
+};
+
+window.setAvatarCache = function (cache, cb) {
+  chrome.storage.local.set({ [AVATAR_CACHE_KEY]: cache }, cb);
 };
 
 window.addFavorite = function (name, cb) {
@@ -25,7 +42,20 @@ window.addFavorite = function (name, cb) {
     // On évite les doublons (insensible à la casse)
     if (!favs.some((fav) => fav.toLowerCase() === name.toLowerCase())) {
       favs.push(name);
-      window.setFavorites(favs, cb);
+      // Récupérer l'avatar et le stocker dans le cache
+      fetch(`https://decapi.me/twitch/avatar/${name}`)
+        .then((res) => res.text())
+        .then((avatarUrl) => {
+          window.getAvatarCache((cache) => {
+            cache[name.toLowerCase()] = avatarUrl;
+            window.setAvatarCache(cache, () => {
+              window.setFavorites(favs, cb);
+            });
+          });
+        })
+        .catch(() => {
+          window.setFavorites(favs, cb);
+        });
     } else if (typeof cb === "function") {
       cb();
     }

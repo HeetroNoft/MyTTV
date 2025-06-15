@@ -67,10 +67,33 @@ window.injectSidebarFavorites = function () {
   if (window.myttvSidebarResizeObs) window.myttvSidebarResizeObs.disconnect();
   window.myttvSidebarResizeObs = new ResizeObserver(updateIconVisibility);
   window.myttvSidebarResizeObs.observe(sidebar);
+
+  // Ajoute un écouteur de clic sur le bloc favoris
+  block.addEventListener("click", () => {
+    window.getFavorites((favs) => {
+      console.log("Favoris:", favs);
+      if (window.getAvatarCache) {
+        window.getAvatarCache((cache) => {
+          console.log("Cache des avatars:", cache);
+        });
+      }
+    });
+  });
 };
 
 window.myttvLastFavs = [];
 window.myttvLastSidebarWidth = null;
+
+// Formate un nombre de viewers (ex: 1300 => 1,3 k)
+function formatViewersCount(viewers) {
+  const n = parseInt(viewers, 10);
+  if (!isNaN(n) && n >= 1000) {
+    return (
+      (n / 1000).toLocaleString("fr-FR", { maximumFractionDigits: 1 }) + " k"
+    );
+  }
+  return viewers;
+}
 
 window.renderSidebarFavoritesList = async function (
   block,
@@ -94,24 +117,47 @@ window.renderSidebarFavoritesList = async function (
       '<div style="color:#aaa;font-size:13px;">Aucune chaîne</div>';
     return;
   }
+  // Utilisation du cache d'avatars
+  const avatarCache = await new Promise((resolve) => {
+    if (window.getAvatarCache) {
+      window.getAvatarCache(resolve);
+    } else {
+      resolve({});
+    }
+  });
   const users = await Promise.all(
     favs.map(async (name) => {
+      let avatar = avatarCache[name.toLowerCase()] || "";
+      if (!avatar) {
+        try {
+          const avatarRes = await fetch(
+            `https://decapi.me/twitch/avatar/${name}`
+          );
+          avatar = await avatarRes.text();
+          // Met à jour le cache si on a récupéré l'avatar
+          if (avatar) {
+            avatarCache[name.toLowerCase()] = avatar;
+            if (window.setAvatarCache) window.setAvatarCache(avatarCache);
+          }
+        } catch {
+          avatar = "";
+        }
+      }
       try {
-        const [avatarRes, liveRes, viewersRes, gameRes] = await Promise.all([
-          fetch(`https://decapi.me/twitch/avatar/${name}`),
+        const [liveRes, viewersRes, gameRes] = await Promise.all([
           fetch(`https://decapi.me/twitch/uptime/${name}`),
           fetch(`https://decapi.me/twitch/viewercount/${name}`),
           fetch(`https://decapi.me/twitch/game/${name}`),
         ]);
-        const avatar = await avatarRes.text();
         const uptimeText = liveRes.ok ? (await liveRes.text()).trim() : "";
         const isLive =
           uptimeText && !uptimeText.toLowerCase().includes("is offline");
-        const viewers = viewersRes.ok ? (await viewersRes.text()).trim() : "";
+        let viewers = viewersRes.ok ? (await viewersRes.text()).trim() : "";
+        viewers = formatViewersCount(viewers);
         const game = gameRes.ok ? (await gameRes.text()).trim() : "";
         return { name, avatar, isLive, viewers, game };
       } catch {
-        return { name, avatar: "", isLive: false, viewers: "", game: "" };
+        return { name, avatar, isLive: false, viewers: "", game: "" };
       }
     })
   );
