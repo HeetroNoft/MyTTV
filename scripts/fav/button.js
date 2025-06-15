@@ -21,9 +21,11 @@ function createFavButton(isFav) {
 }
 
 window.injectFavButton = function (retry = 0) {
+  // Ne rien faire sur la page de recherche
+  if (window.location.pathname.startsWith("/search")) return;
   const channel = window.getChannelName();
   if (!channel) return;
-  document.querySelectorAll("#myttv-fav-btn").forEach((btn) => btn.remove());
+  // Cibler précisément le parent d'injection (évite les doublons)
   const parentDiv = document.querySelector(".Layout-sc-1xcs6mc-0.csXQOq");
   if (!parentDiv) {
     if (retry < 5) {
@@ -35,42 +37,86 @@ window.injectFavButton = function (retry = 0) {
     }
     return;
   }
+  // Supprimer uniquement les boutons dans ce parent
+  parentDiv.querySelectorAll("#myttv-fav-btn").forEach((btn) => btn.remove());
   window.getFavorites((favs) => {
     let isFav = favs.includes(channel);
     const btn = createFavButton(isFav);
     btn.style.marginLeft = "10px";
     btn.style.marginRight = "0px";
     btn.onclick = () => {
-      window.getFavorites((favs) => {
-        let newFavs = favs.slice();
-        let ajout = false;
-        if (newFavs.includes(channel)) {
-          newFavs = newFavs.filter((c) => c !== channel);
-          isFav = false;
+      window.isFavorite(channel, (isFav) => {
+        if (isFav) {
+          window.removeFromFavorites(channel, () => {
+            btn.style.background = "#2F2F36";
+            btn.innerHTML = `<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\"/></svg>`;
+            const block = document.getElementById("myttv-sidebar-favs");
+            if (block && typeof window.removeSidebarFavorite === "function")
+              window.removeSidebarFavorite(channel);
+          });
         } else {
-          newFavs.push(channel);
-          isFav = true;
-          ajout = true;
+          window.addToFavorites(channel, () => {
+            btn.style.background = "#9147ff";
+            btn.innerHTML = `<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"#fff\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\"/></svg>`;
+            const block = document.getElementById("myttv-sidebar-favs");
+            if (block && typeof window.addSidebarFavorite === "function")
+              window.addSidebarFavorite(channel);
+          });
         }
-        window.setFavorites(newFavs, () => {
-          btn.style.background = isFav ? "#9147ff" : "#2F2F36";
-          btn.innerHTML = isFav
-            ? `<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"#fff\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\"/></svg>`
-            : `<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\"/></svg>`;
-          // Ajout/suppression optimisé dans la sidebar
-          const block = document.getElementById("myttv-sidebar-favs");
-          if (block) {
-            if (ajout) {
-              if (typeof window.addSidebarFavorite === "function")
-                window.addSidebarFavorite(channel);
-            } else {
-              if (typeof window.removeSidebarFavorite === "function")
-                window.removeSidebarFavorite(channel);
-            }
-          }
-        });
       });
     };
     parentDiv.insertBefore(btn, parentDiv.children[1]);
+  });
+};
+
+window.injectFavButtonOnSearch = function () {
+  // Sélectionne tous les résultats de chaîne sur la page de recherche
+  document.querySelectorAll(".Layout-sc-1xcs6mc-0.ldAEOa").forEach((result) => {
+    const titleLink = result.querySelector(
+      'strong[data-test-selector*="search-result-offline-channel__name"] a'
+    );
+    if (!titleLink) return;
+    const channel = titleLink.textContent.trim();
+    // Vérifie s'il y a déjà un bouton favoris injecté
+    if (result.querySelector("#myttv-fav-btn")) return;
+    // Trouve le bouton follow pour placer le bouton favoris à côté
+    const followBtn = result.querySelector(
+      'button[data-a-target="follow-button"]'
+    );
+    if (!followBtn) return;
+    window.isFavorite(channel, (isFav) => {
+      const btn = createFavButton(isFav);
+      btn.style.marginLeft = "10px";
+      btn.onclick = () => {
+        window.isFavorite(channel, (isFav) => {
+          if (isFav) {
+            window.removeFromFavorites(channel, () => {
+              btn.style.background = "#2F2F36";
+              btn.innerHTML = `<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\"/></svg>`;
+              const block = document.getElementById("myttv-sidebar-favs");
+              if (block && typeof window.removeSidebarFavorite === "function")
+                window.removeSidebarFavorite(channel);
+            });
+          } else {
+            window.addToFavorites(channel, () => {
+              btn.style.background = "#9147ff";
+              btn.innerHTML = `<svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"#fff\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\"/></svg>`;
+              const block = document.getElementById("myttv-sidebar-favs");
+              if (block && typeof window.addSidebarFavorite === "function")
+                window.addSidebarFavorite(channel);
+            });
+          }
+        });
+      };
+      // Place le bouton dans le parent de la div .Layout-sc-1xcs6mc-0.iglnKI
+      const iglnDiv = result.querySelector(".Layout-sc-1xcs6mc-0.iglnKI");
+      if (iglnDiv) {
+        iglnDiv.appendChild(btn);
+      } else if (followBtn.parentNode) {
+        followBtn.parentNode.appendChild(btn);
+      } else {
+        followBtn.parentNode.insertBefore(btn, followBtn.nextSibling);
+      }
+    });
   });
 };
