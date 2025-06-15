@@ -71,10 +71,10 @@ window.injectSidebarFavorites = function () {
   // Ajoute un écouteur de clic sur le bloc favoris
   block.addEventListener("click", () => {
     window.getFavorites((favs) => {
-      console.log("Favoris:", favs);
+      console.log("[MyTTV] Favoris:", favs);
       if (window.getAvatarCache) {
         window.getAvatarCache((cache) => {
-          console.log("Cache des avatars:", cache);
+          console.log("[MyTTV] Cache des avatars:", cache);
         });
       }
     });
