@@ -17,7 +17,7 @@ window.injectSidebarFavorites = function () {
           </div>
         </div>
       </div>
-      <span class="gLNOIm" id="myttv-fav-title-text">Mes favoris</span>
+      <span style="margin-left:-5px;" class="gLNOIm" id="myttv-fav-title-text">Mes favoris</span>
     </div>
     <div id="myttv-favs-list"></div>
   `;
@@ -139,6 +139,23 @@ window.renderSidebarFavoritesList = async function (
       }
     })
   );
+  // Tri : live d'abord (par viewers décroissant), offline ensuite (ordre alpha)
+  users.sort((a, b) => {
+    if (a.isLive && b.isLive) {
+      // Extraire le nombre de viewers (ex: "1,3 k" → 1300)
+      const parse = (v) => {
+        if (!v) return 0;
+        if (v.includes("k"))
+          return parseFloat(v.replace(/\s?k/, "").replace(",", ".")) * 1000;
+        return parseInt(v, 10) || 0;
+      };
+      return parse(b.viewers) - parse(a.viewers);
+    }
+    if (a.isLive) return -1;
+    if (b.isLive) return 1;
+    // Les deux offline : tri alpha
+    return a.name.localeCompare(b.name);
+  });
   const renderUser = (user) => `
     <div class="ScTransitionBase-sc-hx4quq-0 jaUBmE tw-transition" aria-hidden="false" style="transition-property: transform, opacity; transition-timing-function: ease;">
       <div>
