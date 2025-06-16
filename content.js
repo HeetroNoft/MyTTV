@@ -29,6 +29,13 @@
       setTimeout(() => {
         if (typeof window.injectFavButton === "function")
           window.injectFavButton();
+        // Ajout pour la page de recherche
+        if (
+          window.location.pathname.startsWith("/search") &&
+          typeof window.injectFavButtonOnSearch === "function"
+        ) {
+          setTimeout(() => window.injectFavButtonOnSearch(), 1000);
+        }
       }, 1000);
     }
   }, 1000);
@@ -36,6 +43,13 @@
   // Première injection au chargement
   setTimeout(() => {
     if (typeof window.injectFavButton === "function") window.injectFavButton();
+    // Ajout pour la page de recherche
+    if (
+      window.location.pathname.startsWith("/search") &&
+      typeof window.injectFavButtonOnSearch === "function"
+    ) {
+      setTimeout(() => window.injectFavButtonOnSearch(), 1000);
+    }
   }, 1500);
 
   // Appelle l'injection de la sidebar au chargement et à chaque navigation

@@ -61,3 +61,17 @@ window.addFavorite = function (name, cb) {
     }
   });
 };
+
+window.isFavorite = function (name, cb) {
+  window.getFavorites((favs) => {
+    cb(favs.some((fav) => fav.toLowerCase() === name.toLowerCase()));
+  });
+};
+
+window.addToFavorites = function (name, cb) {
+  window.addFavorite(name, cb);
+};
+
+window.removeFromFavorites = function (name, cb) {
+  window.removeFavorite(name, cb);
+};
