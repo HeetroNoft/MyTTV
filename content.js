@@ -17,7 +17,7 @@
   // Affiche la liste des chaînes favorites dans la console au chargement
   if (typeof window.getFavorites === "function") {
     window.getFavorites((favs) => {
-      console.log("[MyTTV] Chaînes favorites :", favs);
+      console.log("[MyTTV/Fav] Favoris:", favs);
     });
   }
 
