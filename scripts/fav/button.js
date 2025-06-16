@@ -105,3 +105,5 @@ window.injectFavButtonOnSearch = function () {
     });
   });
 };
+
+// (Toute la logique du bouton settings et de la popup a été déplacée dans settings.js)

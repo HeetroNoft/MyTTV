@@ -22,6 +22,8 @@
         "scripts/fav/favorites.js",
         "scripts/fav/sidebar.js",
         "scripts/fav/button.js",
+        "scripts/fav/settings.js",
+        "scripts/fav/svg.js",
         "content.js",
         "scripts/vod-sub/src/restriction-remover.js"
       ],
