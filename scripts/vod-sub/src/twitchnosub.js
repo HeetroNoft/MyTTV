@@ -8,7 +8,7 @@ if (localStorage.getItem("myttv_vodsub_enabled") !== "false") {
 
   const extensionType = window.chrome !== undefined ? "chrome" : "firefox";
 
-  console.log("[TNS] Found extension type : " + extensionType);
+  console.log("[MyTTV/TNS] Found extension type : " + extensionType);
 
   injectScript(`scripts/vod-sub/src/${extensionType}/app.js`);
   injectScript("scripts/vod-sub/src/app.js");

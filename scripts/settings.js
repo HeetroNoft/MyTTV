@@ -83,7 +83,10 @@ window.openMyTTVSettingsPopup = function () {
       vodSubSwitch.checked ? "true" : "false"
     );
     updateVodSubUI(vodSubSwitch.checked);
-    //window.toggleVodSubScripts(vodSubSwitch.checked);
+    console.log(
+      "[MyTTV/Settings] VOD-Sub " +
+        (vodSubSwitch.checked ? "activé" : "désactivé")
+    );
     setTimeout(() => location.reload(), 500);
   };
 
@@ -185,7 +188,6 @@ window.openMyTTVSettingsPopup = function () {
             "myttv_vodsub_enabled",
             data.vodsub ? "true" : "false"
           );
-          //window.toggleVodSubScripts(data.vodsub);
         }
         alert("Import réussi ! Recharge la page pour voir les changements.");
       } catch {

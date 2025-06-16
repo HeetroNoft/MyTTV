@@ -59,10 +59,10 @@ window.injectSidebarFavorites = function () {
 
   block.addEventListener("click", () => {
     window.getFavorites((favs) => {
-      console.log("Favoris:", favs);
+      console.log("[MyTTV/Fav] Favoris:", favs);
       if (window.getAvatarCache) {
         window.getAvatarCache((cache) => {
-          console.log("Cache des avatars:", cache);
+          console.log("[MyTTV/Fav] Cache des avatars:", cache);
         });
       }
     });
