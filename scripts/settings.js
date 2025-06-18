@@ -209,8 +209,11 @@ window.openMyTTVSettingsPopup = function () {
                 }
                 if (typeof window.injectFavButton === "function") {
                   // Supprime le bouton favori existant avant réinjection
-                  document.querySelectorAll("#myttv-fav-btn").forEach((btn) => btn.remove());
-                  if (typeof myttvFavBtnInjected !== "undefined") myttvFavBtnInjected = false;
+                  document
+                    .querySelectorAll("#myttv-fav-btn")
+                    .forEach((btn) => btn.remove());
+                  if (typeof myttvFavBtnInjected !== "undefined")
+                    myttvFavBtnInjected = false;
                   setTimeout(() => window.injectFavButton(), 100); // Laisse le temps au storage de se mettre à jour
                 }
                 // Mettre à jour le compteur après suppression
