@@ -17,8 +17,10 @@
       "matches": ["*://*.twitch.tv/*"],
       "js": [
         "scripts/vod-sub/src/twitchnosub.js",
+        "scripts/i18n.js",
+        "scripts/version.js",
         "scripts/fav/utils.js",
-        "scripts/fav/styles.js",
+        "scripts/styles.js",
         "scripts/fav/favorites.js",
         "scripts/fav/sidebar.js",
         "scripts/fav/button.js",

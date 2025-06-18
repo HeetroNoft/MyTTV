@@ -3,6 +3,14 @@ const STORAGE_KEY = "myttv_favs";
 const AVATAR_CACHE_KEY = "myttv_favs_avatars";
 
 window.getFavorites = function (cb) {
+  if (
+    typeof chrome === "undefined" ||
+    !chrome.storage ||
+    !chrome.storage.local
+  ) {
+    cb([]);
+    return;
+  }
   chrome.storage.local.get([STORAGE_KEY], (result) => {
     cb(result[STORAGE_KEY] || []);
   });

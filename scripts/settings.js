@@ -1,7 +1,34 @@
-// import { settingsSVG } from "./svg.js"; // SUPPRIMÉ car incompatible content-script
-
-// Fonction pour ouvrir la popup de settings MyTTV
+// Nouvelle apparence des settings avec logo centralisé
 window.openMyTTVSettingsPopup = function () {
+  // Détection de la langue et chargement des textes
+  const lang = (
+    window.getMyttvLang
+      ? window.getMyttvLang()
+      : document.documentElement.lang || navigator.language || "en"
+  ).substring(0, 2);
+  const t = window.myttvI18n
+    ? window.myttvI18n(lang)
+    : {
+        settings: "Paramètres",
+        favorites: "Chaînes favorites",
+        noFavorites: "Aucun favori",
+        vodsub: "Permet d'afficher les VOD réservé aux abonnées\u00A0",
+        refreshAvatars: "Rafraîchir les avatars des favoris",
+        update: "Mettre à jour",
+        backup: "Backup",
+        export: "Exporter",
+        import: "Importer",
+        importSuccess:
+          "Import réussi ! Recharge la page pour voir les changements.",
+        importFail: "Fichier invalide",
+        exportFile: "myttv_settings.json",
+        remove: "Supprimer",
+        confirmRemove: "Supprimer ce favori ?",
+        noFavToRefresh: "Aucun favori à rafraîchir.",
+        avatarsRefreshed: "Images rafraîchies !",
+        favoritesCount: "chaînes",
+      };
+
   // Supprime la popup si déjà présente
   const oldPopup = document.getElementById("myttv-settings-popup");
   if (oldPopup) oldPopup.remove();
@@ -26,53 +53,102 @@ window.openMyTTVSettingsPopup = function () {
   popup.style.top = "50%";
   popup.style.left = "50%";
   popup.style.transform = "translate(-50%, -50%)";
-  popup.style.background = "#18181b";
+  popup.style.background = "#18181B";
   popup.style.color = "#fff";
-  popup.style.padding = "32px 24px 24px 24px";
+  popup.style.padding = "32px 48px 48px 48px";
   popup.style.borderRadius = "12px";
   popup.style.boxShadow = "0 8px 32px rgba(0,0,0,0.25)";
-  popup.style.minWidth = "340px";
+  popup.style.minWidth = "500px";
   popup.style.maxWidth = "90vw";
   popup.style.maxHeight = "80vh";
   popup.style.overflowY = "auto";
 
-  // Header
+  // Header avec logo
+  let settingsSVG = window.settingsSVG || "";
+  // Nettoyage des attributs width/height pour éviter les erreurs SVG
+  if (settingsSVG) {
+    settingsSVG = settingsSVG
+      .replace(/\swidth="[^"]*"/gi, "")
+      .replace(/\sheight="[^"]*"/gi, "")
+      .replace(
+        "<svg ",
+        '<svg style="height:60px;width:auto;vertical-align:middle;" '
+      );
+  }
+
+  // (Retirer la balise <style> du innerHTML de la popup)
   popup.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <span style="font-size:1.3em;font-weight:bold;">Paramètres MyTTV</span>
-      <button id="myttv-settings-close" style="background:none;border:none;color:#fff;font-size:1.5em;cursor:pointer;">&times;</button>
+    <div class="myttv-settings-header">
+      <span class="myttv-settings-title myttv-text-noselect">
+        ${settingsSVG} ${t.settings}
+      </span>
     </div>
-    <div style="margin-bottom:18px;">
-      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
-        <span>VOD-Sub&nbsp;</span>
-        <span style="display:inline-block;position:relative;width:44px;height:24px;">
-          <input type="checkbox" id="myttv-option-vodsub" style="opacity:0;width:44px;height:24px;position:absolute;left:0;top:0;cursor:pointer;">
-          <span id="myttv-vodsub-switch" style="position:absolute;left:0;top:0;width:44px;height:24px;background:#444;border-radius:12px;transition:background 0.2s;"></span>
-          <span id="myttv-vodsub-knob" style="position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:left 0.2s;"></span>
-        </span>
-        <span id="myttv-vodsub-status" style="font-size:0.95em;color:#aaa;"></span>
-      </label>
+    <div id="myttv-settings-body">
+      <div id="myttv-settings-list-container">
+        <div class="myttv-settings-list-title myttv-text-noselect">${
+          t.favorites
+        } <span class="myttv-settings-list-title-count">0</span></div>
+        <ul id="myttv-favs-list-popup" class="myttv-settings-favs-list"></ul>
+        <div id="myttv-favs-empty" class="myttv-settings-favs-empty myttv-text-noselect">${
+          t.noFavorites
+        }</div>
+      </div>
+      <div id="myttv-settings-vod-container">
+        <label class="myttv-settings-switch-label">
+          <span style="width: 100%;" class="myttv-text-noselect">${
+            t.vodsub
+          }</span>
+          <span class="myttv-settings-switch">
+            <input type="checkbox" id="myttv-option-vodsub" class="myttv-settings-switch-input" />
+            <span id="myttv-vodsub-switch" class="myttv-settings-switch-bar"></span>
+            <span id="myttv-vodsub-knob" class="myttv-settings-switch-knob"></span>
+          </span>
+        </label>
+      </div>
+      <div id="myttv-settings-refresh-avatars-container" class="myttv-settings-row">
+        <span style="display: inline-block; width: 100%;" class="myttv-text-noselect">${
+          t.refreshAvatars
+        }</span>
+        <div class="myttv-settings-refresh myttv-settings-row">
+          <button id="myttv-refresh-avatars" class="myttv-settings-button kEIAKL myttv-icon-settings myttv-text-noselect">${
+            window.refreshSVG
+          } ${t.update}</button>
+        </div>
+      </div>
+      <div id="myttv-settings-export-import-container" class="myttv-settings-row">
+        <span style="display: inline-block; width: 100%;" class="myttv-text-noselect">${
+          t.backup
+        }</span>
+        <div class="myttv-settings-export-import myttv-settings-row">
+          <button id="myttv-export-settings" class="myttv-settings-button kEIAKL myttv-icon-settings myttv-text-noselect">${window.downloadSVG(
+            true
+          )} ${t.export}</button>
+          <div class="myttv-settings-button kEIAKL">
+            <label class="myttv-icon-settings myttv-text-noselect" for="myttv-import-settings">${window.uploadSVG(
+              true
+            )} ${
+    t.import
+  }<input type="file" id="myttv-import-settings" accept="application/json" style="display: none"/></label>
+          </div>
+        </div>
+      </div>
     </div>
-    <div style="margin-bottom:18px;">
-      <button id="myttv-refresh-avatars" style="background:#23232b;color:#fff;border:none;padding:7px 16px;border-radius:6px;cursor:pointer;">Rafraîchir les images</button>
-      <button id="myttv-export-settings" style="background:#23232b;color:#fff;border:none;padding:7px 16px;border-radius:6px;cursor:pointer;margin-left:10px;">Exporter</button>
-      <label for="myttv-import-settings" style="background:#23232b;color:#fff;border:none;padding:7px 16px;border-radius:6px;cursor:pointer;margin-left:10px;">Importer<input type="file" id="myttv-import-settings" accept="application/json" style="display:none;"></label>
+    <div class="myttv-settings-footer" style="margin-top:32px; text-align:center;">
+      <span style="font-size: 12px; color: #aaa; display:block;">
+        MyTTV v${window.myttvVersion || "unknown"} – ${t.settings}<br>
+        <span style="font-size:11px; color:#888;">par Heet – <a href="https://github.com/heetronoft" target="_blank" style="color:#888;text-decoration:underline;">github.com/heetronoft</a></span>
+      </span>
     </div>
-    <div style="margin-bottom:8px;font-weight:bold;">Favoris :</div>
-    <ul id="myttv-favs-list-popup" style="list-style:none;padding:0;margin:0 0 8px 0;"></ul>
-    <div id="myttv-favs-empty" style="color:#aaa;font-size:13px;display:none;">Aucun favori</div>
   `;
-  popup.querySelector("#myttv-settings-close").onclick = () => overlay.remove();
 
   // Gestion du switch VOD-Sub (toggle visuel + logique)
   const vodSubSwitch = popup.querySelector("#myttv-option-vodsub");
   const vodSubKnob = popup.querySelector("#myttv-vodsub-knob");
   const vodSubBar = popup.querySelector("#myttv-vodsub-switch");
-  const vodSubStatus = popup.querySelector("#myttv-vodsub-status");
+  // Suppression de l'affichage du statut vodSubStatus
   const updateVodSubUI = (checked) => {
     vodSubKnob.style.left = checked ? "22px" : "2px";
     vodSubBar.style.background = checked ? "#9147ff" : "#444";
-    vodSubStatus.textContent = checked ? "activé" : "désactivé";
   };
   const vodEnabled = localStorage.getItem("myttv_vodsub_enabled") !== "false";
   vodSubSwitch.checked = vodEnabled;
@@ -90,33 +166,54 @@ window.openMyTTVSettingsPopup = function () {
     setTimeout(() => location.reload(), 500);
   };
 
-  // Liste des favoris
+  // Liste des favoris (apparence identique à la sidebar)
   const favsList = popup.querySelector("#myttv-favs-list-popup");
   const favsEmpty = popup.querySelector("#myttv-favs-empty");
   window.getFavorites((favs) => {
+    const countSpan = popup.querySelector(".myttv-settings-list-title-count");
     if (!favs || favs.length === 0) {
       favsEmpty.style.display = "block";
       favsList.innerHTML = "";
+      if (countSpan) countSpan.textContent = `0 ${t.favoritesCount}`;
     } else {
       favsEmpty.style.display = "none";
-      favsList.innerHTML = favs
-        .map(
-          (name) =>
-            `<li style='display:flex;align-items:center;justify-content:space-between;padding:4px 0;'>
-          <span style='overflow:hidden;text-overflow:ellipsis;max-width:180px;'>${name}</span>
-          <button class='myttv-remove-fav' data-name='${name}' style='background:none;border:none;color:#ff5c5c;font-size:1.2em;cursor:pointer;margin-left:10px;' title='Supprimer'>&times;</button>
-        </li>`
-        )
-        .join("");
-      favsList.querySelectorAll(".myttv-remove-fav").forEach((btn) => {
-        btn.onclick = function () {
-          const name = btn.getAttribute("data-name");
-          window.removeFavorite(name, () => {
-            btn.parentElement.remove();
-            if (favsList.children.length === 0)
-              favsEmpty.style.display = "block";
-          });
-        };
+      if (countSpan)
+        countSpan.textContent = favs.length.toString() + " " + t.favoritesCount;
+      // Récupérer le cache d'avatars
+      window.getAvatarCache((avatarCache) => {
+        favsList.innerHTML = favs
+          .map((name) => {
+            const avatar =
+              avatarCache && avatarCache[name.toLowerCase()]
+                ? avatarCache[name.toLowerCase()]
+                : "https://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_70x70.png";
+            return `
+                <li>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <img src="${avatar}" alt="avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;background:#23232b;" class="myttv-text-noselect">
+                    <span style="font-weight:bold; text-transform:uppercase;">${name}</span>
+                  </div>
+                  <button class='myttv-remove-fav myttv-text-noselect' data-name='${name}' title='${t.remove}'>${window.closeSVG}</button>
+                </li>
+              `;
+          })
+          .join("");
+        favsList.querySelectorAll(".myttv-remove-fav").forEach((btn) => {
+          btn.onclick = function () {
+            const name = btn.getAttribute("data-name");
+            if (confirm(t.confirmRemove)) {
+              window.removeFavorite(name, () => {
+                btn.parentElement.parentElement.remove();
+                // Mettre à jour le compteur après suppression
+                const newCount = favsList.querySelectorAll("li").length;
+                if (countSpan)
+                  countSpan.textContent =
+                    newCount.toString() + " " + t.favoritesCount;
+                if (newCount === 0) favsEmpty.style.display = "block";
+              });
+            }
+          };
+        });
       });
     }
   });
@@ -124,8 +221,7 @@ window.openMyTTVSettingsPopup = function () {
   // Rafraîchir le cache des images
   popup.querySelector("#myttv-refresh-avatars").onclick = function () {
     window.getFavorites((favs) => {
-      if (!favs || favs.length === 0)
-        return alert("Aucun favori à rafraîchir.");
+      if (!favs || favs.length === 0) return alert(t.noFavToRefresh);
       let done = 0;
       favs.forEach((name) => {
         fetch(`https://decapi.me/twitch/avatar/${name}`)
@@ -135,7 +231,7 @@ window.openMyTTVSettingsPopup = function () {
               cache[name.toLowerCase()] = url;
               window.setAvatarCache(cache, () => {
                 done++;
-                if (done === favs.length) alert("Images rafraîchies !");
+                if (done === favs.length) alert(t.avatarsRefreshed);
               });
             });
           });
@@ -158,7 +254,7 @@ window.openMyTTVSettingsPopup = function () {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "myttv_settings.json";
+        a.download = t.exportFile;
         document.body.appendChild(a);
         a.click();
         setTimeout(() => {
@@ -189,9 +285,9 @@ window.openMyTTVSettingsPopup = function () {
             data.vodsub ? "true" : "false"
           );
         }
-        alert("Import réussi ! Recharge la page pour voir les changements.");
+        alert(t.importSuccess);
       } catch {
-        alert("Fichier invalide");
+        alert(t.importFail);
       }
     };
     reader.readAsText(file);
@@ -200,6 +296,9 @@ window.openMyTTVSettingsPopup = function () {
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
 };
+
+// Ajout de la version à partir du package.json si possible
+if (!window.myttvVersion) window.myttvVersion = "1.0.0";
 
 // Injection d'un bouton dans la navbar Twitch
 window.injectNavbarSettingsButton = function (retry = 0) {
@@ -230,9 +329,7 @@ window.injectNavbarSettingsButton = function (retry = 0) {
   const wrapper = document.createElement("div");
   wrapper.id = "myttv-navbar-btn";
   // Utilisation dynamique du SVG depuis window.settingsSVG
-  const svg =
-    window.settingsSVG ||
-    '<svg width="20" height="20" viewBox="0 0 39 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="#9147ff"/></svg>';
+  const svg = window.settingsSVG;
   wrapper.innerHTML = `
       <button id="myttv-navbar-settings-btn" style="background: transparent; border: none; cursor: pointer; padding: 5px; margin: 5px; display: flex; align-items: center; border-radius: 4px;">
         ${svg}

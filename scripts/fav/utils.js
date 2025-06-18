@@ -11,3 +11,12 @@ window.debounce = function (fn, delay = 0) {
   if (window.myttvSidebarDebounce) clearTimeout(window.myttvSidebarDebounce);
   window.myttvSidebarDebounce = setTimeout(fn, delay);
 };
+
+// Utilitaire pour obtenir la langue Twitch ou navigateur
+window.getMyttvLang = function () {
+  // Twitch définit la langue sur <html lang="xx">
+  const htmlLang = document.documentElement.lang;
+  if (htmlLang) return htmlLang.substring(0, 2).toLowerCase();
+  // Fallback navigateur
+  return (navigator.language || "en").substring(0, 2).toLowerCase();
+};

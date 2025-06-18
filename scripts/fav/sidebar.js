@@ -1,5 +1,20 @@
 // sidebar.js
 window.injectSidebarFavorites = function () {
+  // Détection de la langue et chargement des textes
+  const lang = (
+    window.getMyttvLang
+      ? window.getMyttvLang()
+      : document.documentElement.lang || navigator.language || "en"
+  ).substring(0, 2);
+  const t = window.myttvI18n
+    ? window.myttvI18n(lang)
+    : {
+        favorites: "Mes favoris",
+        noFavorites: "Aucune chaîne",
+        live: "Live",
+        offline: "Déconnecté(e)",
+        viewers: "spectateurs",
+      };
   document.querySelectorAll("#myttv-sidebar-favs").forEach((el) => el.remove());
   const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
   if (!sidebar) return setTimeout(window.injectSidebarFavorites, 1000);
@@ -13,11 +28,13 @@ window.injectSidebarFavorites = function () {
       <div class="InjectLayout-sc-1i43xsx-0 iDMNUO">
         <div class="Layout-sc-1xcs6mc-0 " data-a-target="side-nav-header-collapsed" role="heading" aria-level="3">
           <div style="margin-left:5px;" class="ScSvgWrapper-sc-wkgzod-0 dKXial tw-svg" id="myttv-fav-title-icon">
-            <svg id="myttv-fav-title-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 17.27L16.15 19.78C16.91 20.24 17.8399 19.56 17.6399 18.7L16.54 13.98L20.2099 10.8C20.8799 10.22 20.5199 9.12001 19.6399 9.05001L14.81 8.64001L12.92 4.18001C12.58 3.37001 11.42 3.37001 11.08 4.18001L9.18995 8.63001L4.35995 9.04001C3.47995 9.11001 3.11995 10.21 3.78995 10.79L7.45995 13.97L6.35995 18.69C6.15995 19.55 7.08995 20.23 7.84995 19.77L12 17.27Z" fill="#ADADB8"/></svg>
+            ${window.sidebarStarSVG || ""}
           </div>
         </div>
       </div>
-      <span style="margin-left:-5px;" class="gLNOIm" id="myttv-fav-title-text">Mes favoris</span>
+      <span style="margin-left:-5px;" class="gLNOIm" id="myttv-fav-title-text">${
+        t.favorites
+      }</span>
     </div>
     <div id="myttv-favs-list"></div>
   `;
@@ -35,7 +52,13 @@ window.injectSidebarFavorites = function () {
   }
 
   window.getFavorites((favs) => {
-    window.renderSidebarFavoritesList(block, favs, sidebar.offsetWidth);
+    window.renderSidebarFavoritesList(
+      block,
+      favs,
+      sidebar.offsetWidth,
+      false,
+      t
+    );
   });
 
   function updateIconVisibility() {
@@ -83,7 +106,14 @@ window.renderSidebarFavoritesList = async function (
   block,
   favs,
   sidebarWidth,
-  forceRefresh = false
+  forceRefresh = false,
+  t = {
+    favorites: "Mes favoris",
+    noFavorites: "Aucune chaîne",
+    live: "Live",
+    offline: "Déconnecté(e)",
+    viewers: "spectateurs",
+  }
 ) {
   const favsStr = JSON.stringify(favs);
   if (
@@ -96,8 +126,7 @@ window.renderSidebarFavoritesList = async function (
   window.myttvLastSidebarWidth = sidebarWidth;
   const list = block.querySelector("#myttv-favs-list");
   if (favs.length === 0) {
-    list.innerHTML =
-      '<div style="color:#aaa;font-size:13px;">Aucune chaîne</div>';
+    list.innerHTML = `<div style="color:#aaa;font-size:13px;">${t.noFavorites}</div>`;
     return;
   }
   const avatarCache = await new Promise((resolve) => {
@@ -165,9 +194,11 @@ window.renderSidebarFavoritesList = async function (
           } tw-link" href="/${user.name}">
             <div class="Layout-sc-1xcs6mc-0 kErOMx side-nav-card__avatar">
               <div class="ScAvatar-sc-144b42z-0 dLsNfm tw-avatar">
-                <img class="InjectLayout-sc-1i43xsx-0 fAYJcN tw-image tw-image-avatar${
+                <img class="InjectLayout-sc-1i43xsx-0 fAYJcN tw-image tw-image-avatar$${
                   user.isLive ? "" : " myttv-avatar-offline"
-                }" alt="" src="${user.avatar}" style="object-fit: cover;">
+                }" alt="" src="${
+    user.avatar
+  }" style="object-fit: cover;" onerror="this.onerror=null;this.src='https://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_70x70.png'">
               </div>
             </div>
             ${
@@ -185,7 +216,7 @@ window.renderSidebarFavoritesList = async function (
                   </div>
                   ${
                     user.isLive && user.game
-                      ? `<div class=\"Layout-sc-1xcs6mc-0 hZXGWn side-nav-card__metadata\" data-a-target=\"side-nav-game-title\"><p title=\"${user.game}\" class=\"CoreText-sc-1txzju1-0 catJxV\">${user.game}</p></div>`
+                      ? `<div class=\"Layout-sc-1xcs6mc-0 hZXGWn side-nav-card__metadata\" data-a-target=\"side-nav-game-title\"><p title=\"${user.game}\" class=\"CoreText-sc-1txzju1-0 dHeetw\">${user.game}</p></div>`
                       : ""
                   }
                 </div>
@@ -196,16 +227,14 @@ window.renderSidebarFavoritesList = async function (
                       : ""
                   }
                   <p class=\"CoreText-sc-1txzju1-0 InjectLayout-sc-1i43xsx-0 cdydzE\">${
-                    user.isLive ? "Live" : "Déconnecté(e)"
+                    user.isLive ? t.live : t.offline
                   }</p>
                   <div class=\"Layout-sc-1xcs6mc-0 lnazSn\">
                     <span aria-hidden=\"true\" class=\"CoreText-sc-1txzju1-0 kyIlCg\">${
                       user.isLive ? user.viewers : ""
                     }</span>
                     <p class=\"CoreText-sc-1txzju1-0 InjectLayout-sc-1i43xsx-0 cdydzE\">${
-                      user.isLive
-                        ? user.viewers + " spectateurs"
-                        : "Déconnecté(e)"
+                      user.isLive ? user.viewers + " " + t.viewers : t.offline
                     }</p>
                   </div>
                 </div></div>
@@ -232,23 +261,6 @@ window.addSidebarFavorite = async function (name) {
           block,
           favs,
           sidebar.offsetWidth,
-          true
-        );
-      });
-    });
-  }
-};
-
-window.removeSidebarFavorite = function (name) {
-  const block = document.getElementById("myttv-sidebar-favs");
-  if (!block) return;
-  if (typeof window.removeFavorite === "function") {
-    window.removeFavorite(name, () => {
-      window.getFavorites((favs) => {
-        window.renderSidebarFavoritesList(
-          block,
-          favs,
-          block.parentElement.offsetWidth,
           true
         );
       });
