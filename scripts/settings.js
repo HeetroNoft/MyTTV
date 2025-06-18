@@ -286,7 +286,21 @@ window.openMyTTVSettingsPopup = function () {
       try {
         const data = JSON.parse(evt.target.result);
         if (Array.isArray(data.favs)) {
-          window.setFavorites(data.favs, () => {});
+          window.setFavorites(data.favs, () => {
+            if (typeof window.injectSidebarFavorites === "function") {
+              window.injectSidebarFavorites();
+            }
+            if (typeof window.openMyTTVSettingsPopup === "function") {
+              window.openMyTTVSettingsPopup();
+            }
+          });
+        } else {
+          if (typeof window.injectSidebarFavorites === "function") {
+            window.injectSidebarFavorites();
+          }
+          if (typeof window.openMyTTVSettingsPopup === "function") {
+            window.openMyTTVSettingsPopup();
+          }
         }
         if (typeof data.avatars === "object") {
           window.setAvatarCache(data.avatars, () => {});
