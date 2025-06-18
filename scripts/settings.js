@@ -203,7 +203,16 @@ window.openMyTTVSettingsPopup = function () {
             const name = btn.getAttribute("data-name");
             if (confirm(t.confirmRemove)) {
               window.removeFavorite(name, () => {
-                btn.parentElement.parentElement.remove();
+                btn.parentElement.remove();
+                if (typeof window.injectSidebarFavorites === "function") {
+                  window.injectSidebarFavorites();
+                }
+                if (typeof window.injectFavButton === "function") {
+                  // Supprime le bouton favori existant avant réinjection
+                  document.querySelectorAll("#myttv-fav-btn").forEach((btn) => btn.remove());
+                  if (typeof myttvFavBtnInjected !== "undefined") myttvFavBtnInjected = false;
+                  setTimeout(() => window.injectFavButton(), 100); // Laisse le temps au storage de se mettre à jour
+                }
                 // Mettre à jour le compteur après suppression
                 const newCount = favsList.querySelectorAll("li").length;
                 if (countSpan)
