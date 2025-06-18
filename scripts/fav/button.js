@@ -21,9 +21,7 @@ function createFavButton(isFav) {
   });
   btn.innerHTML = window.starSVG
     ? window.starSVG(isFav)
-    : isFav
-    ? getStarSVG(true)
-    : getStarSVG(false);
+    : window.starSVG(isFav);
   return btn;
 }
 
@@ -33,7 +31,7 @@ function handleFavButtonClick(btn, channel) {
     if (isFav) {
       window.removeFromFavorites(channel, () => {
         btn.style.background = "#2F2F36";
-        btn.innerHTML = getStarSVG(false);
+        btn.innerHTML = window.starSVG(false);
         const block = document.getElementById("myttv-sidebar-favs");
         if (block && typeof window.removeSidebarFavorite === "function")
           window.removeSidebarFavorite(channel);
@@ -41,7 +39,7 @@ function handleFavButtonClick(btn, channel) {
     } else {
       window.addToFavorites(channel, () => {
         btn.style.background = "#9147ff";
-        btn.innerHTML = getStarSVG(true);
+        btn.innerHTML = window.starSVG(true);
         const block = document.getElementById("myttv-sidebar-favs");
         if (block && typeof window.addSidebarFavorite === "function")
           window.addSidebarFavorite(channel);

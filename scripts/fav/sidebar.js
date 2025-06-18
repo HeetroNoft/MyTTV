@@ -267,3 +267,21 @@ window.addSidebarFavorite = async function (name) {
     });
   }
 };
+
+window.removeSidebarFavorite = async function (name) {
+  const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
+  const block = document.getElementById("myttv-sidebar-favs");
+  if (!sidebar || !block) return;
+  if (typeof window.removeFavorite === "function") {
+    window.removeFavorite(name, () => {
+      window.getFavorites((favs) => {
+        window.renderSidebarFavoritesList(
+          block,
+          favs,
+          sidebar.offsetWidth,
+          true
+        );
+      });
+    });
+  }
+};
