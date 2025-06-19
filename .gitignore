@@ -8,3 +8,4 @@ dist/
 *.log
 # Exclure les fichiers système
 Thumbs.db
+*.pem
