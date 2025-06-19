@@ -16,7 +16,15 @@
     {
       "matches": ["*://*.twitch.tv/*"],
       "js": [
-        "scripts/vod-sub/src/twitchnosub.js",
+        "scripts/vod-sub/src/restriction-remover.js",
+        "scripts/vod-sub/src/twitchnosub.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["*://*.twitch.tv/*"],
+      "js": [
         "scripts/i18n.js",
         "scripts/version.js",
         "scripts/fav/utils.js",
@@ -26,8 +34,7 @@
         "scripts/fav/button.js",
         "scripts/settings.js",
         "scripts/svg.js",
-        "content.js",
-        "scripts/vod-sub/src/restriction-remover.js"
+        "content.js"
       ],
       "all_frames": true,
       "run_at": "document_end"
