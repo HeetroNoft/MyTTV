@@ -250,38 +250,28 @@ window.renderSidebarFavoritesList = async function (
   list.innerHTML = users.map(renderUser).join("");
 };
 
-window.addSidebarFavorite = async function (name) {
+function updateSidebarFavorites(forceRefresh = true) {
   const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
   const block = document.getElementById("myttv-sidebar-favs");
   if (!sidebar || !block) return;
+  window.getFavorites((favs) => {
+    window.renderSidebarFavoritesList(
+      block,
+      favs,
+      sidebar.offsetWidth,
+      forceRefresh
+    );
+  });
+}
+
+window.addSidebarFavorite = async function (name) {
   if (typeof window.addFavorite === "function") {
-    window.addFavorite(name, () => {
-      window.getFavorites((favs) => {
-        window.renderSidebarFavoritesList(
-          block,
-          favs,
-          sidebar.offsetWidth,
-          true
-        );
-      });
-    });
+    window.addFavorite(name, updateSidebarFavorites);
   }
 };
 
 window.removeSidebarFavorite = async function (name) {
-  const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
-  const block = document.getElementById("myttv-sidebar-favs");
-  if (!sidebar || !block) return;
   if (typeof window.removeFavorite === "function") {
-    window.removeFavorite(name, () => {
-      window.getFavorites((favs) => {
-        window.renderSidebarFavoritesList(
-          block,
-          favs,
-          sidebar.offsetWidth,
-          true
-        );
-      });
-    });
+    window.removeFavorite(name, updateSidebarFavorites);
   }
 };
