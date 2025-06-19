@@ -1,6 +1,9 @@
 // Fichier d'internationalisation pour MyTTV (français, anglais et espagnol)
 // Usage : import ou inclusion via <script> puis window.myttvI18n(lang)
-
+window.myttvVersion = function () {
+  const APP_VERSION = chrome.runtime.getManifest().version;
+  return APP_VERSION ? `v${APP_VERSION}` : "unknown";
+};
 window.myttvI18n = function (lang) {
   const dict = {
     fr: {

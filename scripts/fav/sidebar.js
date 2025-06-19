@@ -126,7 +126,7 @@ window.renderSidebarFavoritesList = async function (
   window.myttvLastSidebarWidth = sidebarWidth;
   const list = block.querySelector("#myttv-favs-list");
   if (favs.length === 0) {
-    list.innerHTML = `<div style="color:#aaa;font-size:13px;">${t.noFavorites}</div>`;
+    list.innerHTML = `<div style="margin-left:11px;color:#aaa;font-size:13px;">${t.noFavorites}</div>`;
     return;
   }
   const avatarCache = await new Promise((resolve) => {

@@ -135,7 +135,7 @@ window.openMyTTVSettingsPopup = function () {
     </div>
     <div class="myttv-settings-footer" style="margin-top:32px; text-align:center;">
       <span style="font-size: 12px; color: #aaa; display:block;">
-        MyTTV v${window.myttvVersion || "unknown"} – ${t.settings}<br>
+        MyTTV ${window.myttvVersion()} – ${t.settings}<br>
         <span style="font-size:11px; color:#888;">par Heet – <a href="https://github.com/heetronoft" target="_blank" style="color:#888;text-decoration:underline;">github.com/heetronoft</a></span>
       </span>
     </div>
@@ -173,9 +173,11 @@ window.openMyTTVSettingsPopup = function () {
     const countSpan = popup.querySelector(".myttv-settings-list-title-count");
     if (!favs || favs.length === 0) {
       favsEmpty.style.display = "block";
+      favsList.style.display = "none";
       favsList.innerHTML = "";
       if (countSpan) countSpan.textContent = `0 ${t.favoritesCount}`;
     } else {
+      favsList.style.display = "block";
       favsEmpty.style.display = "none";
       if (countSpan)
         countSpan.textContent = favs.length.toString() + " " + t.favoritesCount;
@@ -221,7 +223,10 @@ window.openMyTTVSettingsPopup = function () {
                 if (countSpan)
                   countSpan.textContent =
                     newCount.toString() + " " + t.favoritesCount;
-                if (newCount === 0) favsEmpty.style.display = "block";
+                if (newCount === 0) {
+                  favsList.style.display = "none";
+                  favsEmpty.style.display = "block";
+                }
               });
             }
           };
@@ -322,9 +327,6 @@ window.openMyTTVSettingsPopup = function () {
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
 };
-
-// Ajout de la version à partir du package.json si possible
-if (!window.myttvVersion) window.myttvVersion = "1.0.0";
 
 // Injection d'un bouton dans la navbar Twitch
 window.injectNavbarSettingsButton = function (retry = 0) {
