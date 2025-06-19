@@ -25,6 +25,13 @@ function createFavButton(isFav) {
   return btn;
 }
 
+// Utilitaire pour injecter un bouton favoris dans un parent
+function injectFavButtonTo(parent, channel, isFav) {
+  const btn = createFavButton(isFav);
+  btn.onclick = () => handleFavButtonClick(btn, channel);
+  parent.appendChild(btn);
+}
+
 // Gestion du clic sur le bouton favoris (ajout/suppression)
 function handleFavButtonClick(btn, channel) {
   window.isFavorite(channel, (isFav) => {
@@ -51,8 +58,12 @@ function handleFavButtonClick(btn, channel) {
 let myttvFavBtnInjected = false;
 // Injection du bouton favoris sur une page de chaîne
 window.injectFavButton = function (retry = 0) {
-  if (window.location.pathname.startsWith("/search")) return;
-  if (myttvFavBtnInjected || document.getElementById("myttv-fav-btn")) return;
+  if (
+    window.location.pathname.startsWith("/search") ||
+    myttvFavBtnInjected ||
+    document.getElementById("myttv-fav-btn")
+  )
+    return;
   const channel = window.getChannelName();
   if (!channel) return;
   // Attendre que le bouton cible soit présent
@@ -60,11 +71,7 @@ window.injectFavButton = function (retry = 0) {
     if (myttvFavBtnInjected || document.getElementById("myttv-fav-btn")) return;
     const coreBtn = document.querySelector(".ScCoreButton-sc-ocjdkq-0.jHHCzn");
     if (!coreBtn) {
-      if (localRetry < 20) {
-        setTimeout(() => tryInject(localRetry + 1), 200);
-      } else {
-        console.warn("[MyTTV] Bouton cible non trouvé après 20 tentatives.");
-      }
+      if (localRetry < 20) setTimeout(() => tryInject(localRetry + 1), 200);
       return;
     }
     myttvFavBtnInjected = true; // Flag dès le début pour éviter les doubles
@@ -76,10 +83,7 @@ window.injectFavButton = function (retry = 0) {
       const parentDiv = document.querySelector(".Layout-sc-1xcs6mc-0.csXQOq");
       if (!parentDiv) return;
       window.getFavorites((favs) => {
-        const isFav = favs.includes(channel);
-        const btn = createFavButton(isFav);
-        btn.onclick = () => handleFavButtonClick(btn, channel);
-        parentDiv.insertBefore(btn, parentDiv.children[1]);
+        injectFavButtonTo(parentDiv, channel, favs.includes(channel));
       });
     }, 200);
   }
@@ -94,52 +98,58 @@ window.injectFavButtonOnSearch = function () {
     );
     if (!titleLink) return;
     const channel = titleLink.textContent.trim();
-    // Toujours retirer les anciens boutons dans chaque bloc résultat
-    result.querySelectorAll("#myttv-fav-btn").forEach((btn) => btn.remove());
-    // Ne pas injecter si un bouton existe déjà dans le bloc résultat
-    if (result.querySelector("#myttv-fav-btn")) return;
+    // Vérifie si le bouton existe déjà pour ce channel
+    const existingBtn = result.querySelector(
+      `#myttv-fav-btn[data-channel='${channel}']`
+    );
+    if (existingBtn) return;
+    // Supprime seulement les boutons orphelins (sans data-channel ou mauvais channel)
+    result.querySelectorAll("#myttv-fav-btn").forEach((btn) => {
+      if (btn.getAttribute("data-channel") !== channel) btn.remove();
+    });
     const followBtn = result.querySelector(
       'button[data-a-target="follow-button"]'
     );
     if (!followBtn) return;
     window.isFavorite(channel, (isFav) => {
-      const btn = createFavButton(isFav);
-      btn.onclick = () => handleFavButtonClick(btn, channel);
       const iglnDiv = result.querySelector(".Layout-sc-1xcs6mc-0.iglnKI");
-      if (iglnDiv) {
-        iglnDiv.appendChild(btn);
-      } else if (followBtn.parentNode) {
-        followBtn.parentNode.appendChild(btn);
-      } else {
-        followBtn.parentNode.insertBefore(btn, followBtn.nextSibling);
-      }
+      const btn = createFavButton(isFav);
+      btn.setAttribute("data-channel", channel);
+      btn.onclick = () => handleFavButtonClick(btn, channel);
+      if (iglnDiv) iglnDiv.appendChild(btn);
+      else if (followBtn.parentNode) followBtn.parentNode.appendChild(btn);
     });
   });
 };
 
-// Réinitialisation du flag d'injection lors d'un changement de page
+// Observateur unique pour la navigation et la disparition du bouton
 if (typeof window !== "undefined") {
-  let lastPathBtn = "";
+  let lastPath = "",
+    lastSearchPath = "",
+    lastWasPresent = false;
   setInterval(() => {
-    if (window.location.pathname !== lastPathBtn) {
-      lastPathBtn = window.location.pathname;
+    const path = window.location.pathname;
+    if (path !== lastPath) {
+      lastPath = path;
       myttvFavBtnInjected = false;
     }
-  }, 500);
-}
-
-// Surveillance de la disparition du bouton favoris et réinjection automatique
-(function () {
-  let lastWasPresent = false;
-  setInterval(() => {
+    // Réinjection sur disparition
     const isPresent = !!document.getElementById("myttv-fav-btn");
     if (lastWasPresent && !isPresent) {
-      // Le bouton vient de disparaître, on tente la réinjection après 500ms
       setTimeout(() => {
         myttvFavBtnInjected = false;
         window.injectFavButton();
       }, 500);
     }
     lastWasPresent = isPresent;
-  }, 300);
-})();
+    // Gestion page search
+    if (path.startsWith("/search")) {
+      if (path !== lastSearchPath) {
+        lastSearchPath = path;
+        setTimeout(() => window.injectFavButtonOnSearch(), 500);
+      } else {
+        window.injectFavButtonOnSearch();
+      }
+    }
+  }, 700);
+}

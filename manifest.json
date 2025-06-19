@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "MyTTV",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "Ajoute une liste de chaînes Twitch favorites dans la sidebar.",
   "web_accessible_resources": [
     {
