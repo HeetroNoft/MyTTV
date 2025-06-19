@@ -1,151 +1,151 @@
 # MyTTV
 
-**MyTTV** est une extension open-source pour navigateur (Chrome/Firefox) qui enrichit l'expérience Twitch en ajoutant une gestion avancée et personnalisable de vos chaînes favorites, ainsi que des outils pour contourner certaines restrictions VOD.
+**MyTTV** is an open-source browser extension (Chrome/Firefox) that enhances your Twitch experience by adding advanced and customizable favorite channel management, as well as tools to bypass certain VOD restrictions.
 
-## Sommaire
+## Table of Contents
 
 - [MyTTV](#myttv)
-  - [Sommaire](#sommaire)
-  - [Fonctionnalités](#fonctionnalités)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
   - [Installation](#installation)
-    - [Depuis le code source (développement)](#depuis-le-code-source-développement)
-    - [Depuis un package (à venir)](#depuis-un-package-à-venir)
-  - [Utilisation](#utilisation)
-  - [Gestion des favoris](#gestion-des-favoris)
+    - [From source (development)](#from-source-development)
+    - [From a package (coming soon)](#from-a-package-coming-soon)
+  - [Usage](#usage)
+  - [Favorites Management](#favorites-management)
   - [VOD-Sub (Bypass VOD Sub-Only)](#vod-sub-bypass-vod-sub-only)
-  - [Paramètres et personnalisation](#paramètres-et-personnalisation)
-  - [Export/Import des données](#exportimport-des-données)
-  - [Développement](#développement)
-  - [Structure du projet](#structure-du-projet)
+  - [Settings \& Customization](#settings--customization)
+  - [Export/Import Data](#exportimport-data)
+  - [Development](#development)
+  - [Project Structure](#project-structure)
   - [Permissions](#permissions)
   - [FAQ](#faq)
-  - [Licence](#licence)
-  - [Auteur \& Contact](#auteur--contact)
+  - [License](#license)
+  - [Author \& Contact](#author--contact)
 
-## Fonctionnalités
+## Features
 
-- **Ajout/Suppression rapide de chaînes favorites** via un bouton étoile sur chaque page de chaîne et dans les résultats de recherche.
-- **Sidebar enrichie** :
-  - Affichage de vos favoris dans la sidebar Twitch native.
-  - Statut en direct, nombre de spectateurs, jeu en cours, avatars personnalisés.
-  - Tri automatique : chaînes en direct en haut, offline en bas (ordre alphabétique).
-- **Rafraîchissement automatique** des informations toutes les 5 minutes (statut, viewers, jeu, avatars).
-- **Cache d’avatars** pour accélérer l’affichage et limiter les requêtes externes.
-- **Export/Import** de vos paramètres (favoris, avatars, options) pour sauvegarder ou transférer votre configuration.
-- **Option VOD-Sub** : permet de contourner certaines restrictions sur les VODs Twitch (VOD sub-only, géo-blocage, etc.).
-- **Interface de paramètres** accessible via une icône violette dans la barre de navigation Twitch.
-- **Support multilingue** (français/anglais, extensible).
-- **Compatibilité multi-navigateurs** (Chrome, Firefox, Edge, etc.).
+- **Quick add/remove favorite channels** via a star button on each channel page and in search results.
+- **Enhanced sidebar**:
+  - Display your favorites in the native Twitch sidebar.
+  - Live status, viewer count, current game, custom avatars.
+  - Automatic sorting: live channels at the top, offline at the bottom (alphabetical order).
+- **Automatic refresh** of information every 5 minutes (status, viewers, game, avatars).
+- **Avatar cache** for faster display and fewer external requests.
+- **Export/Import** your settings (favorites, avatars, options) to backup or transfer your configuration.
+- **VOD-Sub option**: allows you to bypass some Twitch VOD restrictions (sub-only, geo-blocking, etc.).
+- **Settings interface** accessible via a purple icon in the Twitch navigation bar.
+- **Multi-language support** (French/English, extensible).
+- **Multi-browser compatibility** (Chrome, Firefox, Edge, etc.).
 
 ## Installation
 
-### Depuis le code source (développement)
+### From source (development)
 
-1. Clonez ce dépôt :
+1. Clone this repository:
    ```bash
    git clone https://github.com/heetronoft/MyTTV.git
    ```
-2. Ouvrez `chrome://extensions` (ou `about:debugging` sur Firefox).
-3. Activez le mode développeur.
-4. Cliquez sur « Charger l’extension non empaquetée » et sélectionnez le dossier du projet.
+2. Open `chrome://extensions` (or `about:debugging` on Firefox).
+3. Enable developer mode.
+4. Click "Load unpacked extension" and select the project folder.
 
-### Depuis un package (à venir)
+### From a package (coming soon)
 
-- Un package zip sera proposé pour installation rapide.
+- A zip package will be provided for quick installation.
 
-## Utilisation
+## Usage
 
-- **Ajouter/retirer un favori** : Cliquez sur l’étoile à côté du bouton « Suivre » sur une page de chaîne ou dans les résultats de recherche.
-- **Sidebar** : Retrouvez tous vos favoris dans la sidebar Twitch, avec leur statut et informations en temps réel.
-- **Paramètres** : Cliquez sur l’icône violette dans la barre de navigation pour accéder aux options (export/import, VOD-Sub, etc.).
-- **VOD-Sub** : Activez l’option dans les paramètres pour tenter de contourner les restrictions sur les VODs sub-only ou bloqués.
+- **Add/remove a favorite**: Click the star next to the "Follow" button on a channel page or in search results.
+- **Sidebar**: Find all your favorites in the Twitch sidebar, with real-time status and info.
+- **Settings**: Click the purple icon in the navigation bar to access options (export/import, VOD-Sub, etc.).
+- **VOD-Sub**: Enable the option in settings to try bypassing sub-only or blocked VOD restrictions.
 
-## Gestion des favoris
+## Favorites Management
 
-- Les favoris sont stockés localement dans le navigateur (aucune donnée n’est envoyée à un serveur tiers).
-- Vous pouvez ajouter/retirer des chaînes à tout moment.
-- Le cache d’avatars est automatiquement géré et mis à jour.
+- Favorites are stored locally in your browser (no data is sent to any third-party server).
+- You can add/remove channels at any time.
+- The avatar cache is managed and updated automatically.
 
 ## VOD-Sub (Bypass VOD Sub-Only)
 
-- Permet de visionner certains VODs sub-only ou restreints (DMCA, géo-blocage, etc.).
-- Fonctionne en patchant le player Twitch pour contourner les restrictions (dans la limite des possibilités techniques et légales).
-- Peut cesser de fonctionner si Twitch modifie ses protections.
-- Option désactivable à tout moment dans les paramètres.
+- Allows you to watch some sub-only or restricted VODs (DMCA, geo-blocking, etc.).
+- Works by patching the Twitch player to bypass restrictions (within technical and legal limits).
+- May stop working if Twitch updates its protections.
+- Option can be disabled at any time in settings.
 
-## Paramètres et personnalisation
+## Settings & Customization
 
-- **Export/Import** : Sauvegardez ou restaurez vos favoris et paramètres via un fichier JSON.
-- **Options** : Activez/désactivez le VOD-Sub, réinitialisez le cache, personnalisez l’interface.
-- **Langue** : Détection automatique, extensible via le dossier `scripts/i18n.js`.
+- **Export/Import**: Backup or restore your favorites and settings via a JSON file.
+- **Options**: Enable/disable VOD-Sub, reset cache, customize the interface.
+- **Language**: Auto-detected, extensible via `scripts/i18n.js`.
 
-## Export/Import des données
+## Export/Import Data
 
-- Accédez à la popup de paramètres.
-- Cliquez sur « Exporter » pour télécharger vos données.
-- Cliquez sur « Importer » pour restaurer une sauvegarde.
+- Open the settings popup.
+- Click "Export" to download your data.
+- Click "Import" to restore a backup.
 
-## Développement
+## Development
 
-- Le code source est organisé dans le dossier `scripts/` :
-  - `fav/` : gestion des favoris (boutons, sidebar, utilitaires)
-  - `vod-sub/` : contournement des restrictions VOD (patchs, workers, scripts spécifiques)
-  - `i18n.js` : gestion multilingue
-  - `settings.js` : gestion des paramètres
-  - `styles.js` : styles injectés
-  - `svg.js` : icônes SVG
-- Le script principal d’injection est `content.js`.
-- Les assets (icônes, images) sont dans `assets/icons/`.
+- Source code is organized in the `scripts/` folder:
+  - `fav/`: favorites management (buttons, sidebar, utilities)
+  - `vod-sub/`: VOD restriction bypass (patches, workers, specific scripts)
+  - `i18n.js`: multi-language support
+  - `settings.js`: settings management
+  - `styles.js`: injected styles
+  - `svg.js`: SVG icons
+- The main injection script is `content.js`.
+- Assets (icons, images) are in `assets/icons/`.
 
-## Structure du projet
+## Project Structure
 
 ```
 MyTTV/
-├── content.js                # Script principal injecté
-├── manifest.json             # Déclaration de l’extension
+├── content.js                # Main injected script
+├── manifest.json             # Extension manifest
 ├── scripts/
-│   ├── fav/                  # Gestion des favoris
-│   ├── vod-sub/              # Scripts VOD-Sub (bypass)
-│   ├── i18n.js               # Internationalisation
-│   ├── settings.js           # Paramètres
-│   ├── styles.js             # Styles custom
-│   └── svg.js                # Icônes SVG
+│   ├── fav/                  # Favorites management
+│   ├── vod-sub/              # VOD-Sub scripts (bypass)
+│   ├── i18n.js               # Internationalization
+│   ├── settings.js           # Settings
+│   ├── styles.js             # Custom styles
+│   └── svg.js                # SVG icons
 ├── assets/
-│   └── icons/                # Icônes de l’extension
+│   └── icons/                # Extension icons
 ├── README.md
 └── ...
 ```
 
 ## Permissions
 
-- Accès à Twitch (`https://*.twitch.tv/*`)
-- Stockage local (favoris, avatars, paramètres)
-- Aucune donnée n’est transmise à un serveur tiers
+- Access to Twitch (`https://*.twitch.tv/*`)
+- Local storage (favorites, avatars, settings)
+- No data is sent to any third-party server
 
 ## FAQ
 
-**Q : Mes favoris sont-ils synchronisés entre mes appareils ?**
+**Q: Are my favorites synced between devices?**
 
-- Non, ils sont stockés localement. Utilisez l’export/import pour transférer vos favoris.
+- No, they are stored locally. Use export/import to transfer your favorites.
 
-**Q : Le VOD-Sub ne fonctionne plus, que faire ?**
+**Q: VOD-Sub no longer works, what should I do?**
 
-- Twitch met régulièrement à jour ses protections. Vérifiez les mises à jour de l’extension ou signalez un problème sur GitHub.
+- Twitch regularly updates its protections. Check for extension updates or report an issue on GitHub.
 
-**Q : L’extension est-elle sûre ?**
+**Q: Is the extension safe?**
 
-- Oui, le code est open-source et aucune donnée personnelle n’est transmise à un serveur externe.
+- Yes, the code is open-source and no personal data is sent to any external server.
 
-**Q : Comment contribuer ?**
+**Q: How can I contribute?**
 
-- Forkez le projet, proposez des PR ou ouvrez une issue sur GitHub.
+- Fork the project, submit PRs, or open an issue on GitHub.
 
-## Licence
+## License
 
 MIT
 
-## Auteur & Contact
+## Author & Contact
 
-- **Auteur** : Heet
-- **GitHub** : [heetronoft](https://github.com/heetronoft)
-- **Contact** : via issues GitHub
+- **Author**: Heet
+- **GitHub**: [heetronoft](https://github.com/heetronoft)
+- **Contact**: via GitHub issues
