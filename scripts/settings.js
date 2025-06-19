@@ -84,7 +84,7 @@ window.openMyTTVSettingsPopup = function () {
       </span>
     </div>
     <div id="myttv-settings-body">
-      <div id="myttv-settings-list-container">
+      <div id="myttv-settings-list-custom-container">
         <div class="myttv-settings-list-title myttv-text-noselect">${
           t.favorites
         } <span class="myttv-settings-list-title-count">0</span></div>
@@ -93,7 +93,7 @@ window.openMyTTVSettingsPopup = function () {
           t.noFavorites
         }</div>
       </div>
-      <div id="myttv-settings-vod-container">
+      <div id="myttv-settings-vod-custom-container">
         <label class="myttv-settings-switch-label">
           <span style="width: 100%;" class="myttv-text-noselect">${
             t.vodsub
@@ -105,7 +105,7 @@ window.openMyTTVSettingsPopup = function () {
           </span>
         </label>
       </div>
-      <div id="myttv-settings-refresh-avatars-container" class="myttv-settings-row">
+      <div id="myttv-settings-refresh-avatars-custom-container" class="myttv-settings-row">
         <span style="display: inline-block; width: 100%;" class="myttv-text-noselect">${
           t.refreshAvatars
         }</span>
@@ -115,7 +115,7 @@ window.openMyTTVSettingsPopup = function () {
           } ${t.update}</button>
         </div>
       </div>
-      <div id="myttv-settings-export-import-container" class="myttv-settings-row">
+      <div id="myttv-settings-export-import-custom-container" class="myttv-settings-row">
         <span style="display: inline-block; width: 100%;" class="myttv-text-noselect">${
           t.backup
         }</span>

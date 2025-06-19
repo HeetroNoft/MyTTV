@@ -132,7 +132,7 @@ window.injectGlobalStyles = function () {
           justify-content: space-between;
           align-items: center;
         }
-        [id*="-container"] {
+        [id*="-custom-container"] {
           display: flex;
           align-items: flex-start;
           justify-content: center;
@@ -178,7 +178,7 @@ window.injectGlobalStyles = function () {
           padding: 8px 8px;
           gap: 10px;
         }
-        #myttv-settings-export-import-container, #myttv-settings-refresh-avatars-container {
+        #myttv-settings-export-import-custom-container, #myttv-settings-refresh-avatars-custom-container {
           display: flex;
           flex-direction: column;
           align-items: center;
