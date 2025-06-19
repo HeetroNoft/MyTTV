@@ -88,7 +88,7 @@ window.openMyTTVSettingsPopup = function () {
         <div class="myttv-settings-list-title myttv-text-noselect">${
           t.favorites
         } <span class="myttv-settings-list-title-count">0</span></div>
-        <ul id="myttv-favs-list-popup" class="myttv-settings-favs-list"></ul>
+        <ul id="myttv-favs-list-popup" class="myttv-scrollbar myttv-settings-favs-list"></ul>
         <div id="myttv-favs-empty" class="myttv-settings-favs-empty myttv-text-noselect">${
           t.noFavorites
         }</div>
@@ -134,7 +134,7 @@ window.openMyTTVSettingsPopup = function () {
       </div>
     </div>
     <div class="myttv-settings-footer" style="margin-top:32px; text-align:center;">
-      <span style="font-size: 12px; color: #aaa; display:block;">
+      <span class="myttv-text-noselect" style="font-size: 12px; color: #aaa; display:block;">
         MyTTV ${window.myttvVersion()} – ${t.settings}<br>
         <span style="font-size:11px; color:#888;">par Heet – <a href="https://github.com/heetronoft" target="_blank" style="color:#888;text-decoration:underline;">github.com/heetronoft</a></span>
       </span>

@@ -214,6 +214,29 @@ window.injectGlobalStyles = function () {
           background:rgba(83, 83, 95, 0.32); !important;
           cursor: pointer;
         }
+        
+        .myttv-scrollbar::-webkit-scrollbar {
+          width: 6px; /* for vertical scrollbars */
+          height: 6px; /* for horizontal scrollbars */
+        }
+
+        /* Track (the background) */
+        .myttv-scrollbar::-webkit-scrollbar-track {
+          background: rgba(83, 83, 95, 0.32);
+          border-radius: 4px;
+        }
+
+        /* Thumb (the draggable part) */
+        .myttv-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(83, 83, 95, 0.64);
+          border-radius: 4px;
+        }
+
+        /* On hover */
+        .myttv-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(83, 83, 95, 0.78);
+        }
+
       `;
     document.head.appendChild(style);
   }
