@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rm -rf dist && mkdir dist && zip -r dist/myttv-beta.zip . -x 'node_modules/*' -x '.git/*' -x 'dist/*' -x '*.DS_Store'"
   },
   "keywords": [],
   "author": "",

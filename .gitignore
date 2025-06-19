@@ -1,2 +1,10 @@
 node_modules/
 package-lock.json
+dist/
+*.zip
+.DS_Store
+.env
+# Exclure les fichiers temporaires
+*.log
+# Exclure les fichiers système
+Thumbs.db
