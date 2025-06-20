@@ -1,6 +1,14 @@
 // Fichier d'internationalisation pour MyTTV (français, anglais et espagnol)
 // Usage : import ou inclusion via <script> puis window.myttvI18n(lang)
 window.myttvVersion = function () {
+  if (typeof chrome === "undefined" || !chrome.runtime) {
+    return "unknown";
+  }
+  // Récupère la version de l'extension depuis le manifeste
+  // Si la version n'est pas définie, retourne "unknown"
+  // Note : chrome.runtime.getManifest() est disponible dans les extensions Chrome
+  // et permet d'accéder aux métadonnées de l'extension.
+  // La version est définie dans le fichier manifest.json de l'extension.
   const APP_VERSION = chrome.runtime.getManifest().version;
   return APP_VERSION ? `v${APP_VERSION}` : "unknown";
 };
