@@ -51,7 +51,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "myttv@heetme.com",
-      "strict_min_version": "109.0"
+      "strict_min_version": "58.0"
     }
   }
 }
