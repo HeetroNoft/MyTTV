@@ -19,9 +19,13 @@ window.injectSidebarFavorites = function () {
   const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
   if (!sidebar) return setTimeout(window.injectSidebarFavorites, 1000);
 
+  // Find the title block to insert after
+  const titleDiv = document.querySelector(
+    ".Layout-sc-1xcs6mc-0.bCIucA.side-nav__title"
+  );
   const block = document.createElement("div");
   block.id = "myttv-sidebar-favs";
-  block.style.margin = "16px 0 8px 0";
+  block.style.margin = "24px 0 8px 0";
   block.style.padding = "0";
   block.innerHTML = `
     <div style="display:flex;align-items:center;margin-bottom:8px;margin-left:10px;gap:6px;">
@@ -45,7 +49,10 @@ window.injectSidebarFavorites = function () {
     if (text && svg) svg.style.color = getComputedStyle(text).color;
   }, 0);
 
-  if (sidebar.children.length >= 2) {
+  if (titleDiv && titleDiv.parentNode) {
+    // Insert just after the title div
+    titleDiv.parentNode.insertBefore(block, titleDiv.nextSibling);
+  } else if (sidebar.children.length >= 2) {
     sidebar.insertBefore(block, sidebar.children[2]);
   } else {
     sidebar.appendChild(block);
@@ -76,9 +83,41 @@ window.injectSidebarFavorites = function () {
     });
   }
   updateIconVisibility();
+  // Appliquer la bonne marge selon la taille de la sidebar
+  function updateBlockMargin() {
+    if (!block || !sidebar) return;
+    const width = sidebar.offsetWidth;
+    block.style.margin = width <= 55 ? "8px 0 8px 0" : "24px 0 8px 0";
+  }
+  updateBlockMargin();
+  // Mettre à jour la marge aussi lors du resize
+  if (window.myttvSidebarMarginObs) window.myttvSidebarMarginObs.disconnect();
+  window.myttvSidebarMarginObs = new ResizeObserver(updateBlockMargin);
+  window.myttvSidebarMarginObs.observe(sidebar);
+
   if (window.myttvSidebarResizeObs) window.myttvSidebarResizeObs.disconnect();
   window.myttvSidebarResizeObs = new ResizeObserver(updateIconVisibility);
   window.myttvSidebarResizeObs.observe(sidebar);
+
+  // Observer pour replacer la liste si la sidebar change de taille ou si le titre est recréé
+  function observeTitleDiv() {
+    const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
+    const block = document.getElementById("myttv-sidebar-favs");
+    if (!sidebar || !block) return;
+    const config = { childList: true, subtree: true };
+    if (window.myttvSidebarTitleObs) window.myttvSidebarTitleObs.disconnect();
+    window.myttvSidebarTitleObs = new MutationObserver(() => {
+      const titleDiv = document.querySelector(
+        ".Layout-sc-1xcs6mc-0.bCIucA.side-nav__title"
+      );
+      if (titleDiv && block.previousSibling !== titleDiv) {
+        // Replace block just after the titleDiv
+        titleDiv.parentNode.insertBefore(block, titleDiv.nextSibling);
+      }
+    });
+    window.myttvSidebarTitleObs.observe(sidebar, config);
+  }
+  observeTitleDiv();
 
   block.addEventListener("click", () => {
     window.getFavorites((favs) => {
