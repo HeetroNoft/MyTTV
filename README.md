@@ -8,8 +8,11 @@
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
   - [Installation](#installation)
+    - [Chrome (ZIP or CRX)](#chrome-zip-or-crx)
+      - [Installation via ZIP (developer mode)](#installation-via-zip-developer-mode)
+      - [Installation via CRX](#installation-via-crx)
+    - [Firefox (XPI)](#firefox-xpi)
     - [From source (development)](#from-source-development)
-    - [From a package (coming soon)](#from-a-package-coming-soon)
   - [Usage](#usage)
   - [Favorites Management](#favorites-management)
   - [VOD-Sub (Bypass VOD Sub-Only)](#vod-sub-bypass-vod-sub-only)
@@ -39,6 +42,33 @@
 
 ## Installation
 
+### Chrome (ZIP or CRX)
+
+The `.zip` (for developer installation) and `.crx` (for Chromium) files are available in the [Releases](https://github.com/heetronoft/MyTTV/releases) section of the GitHub repository, along with the future `.xpi` file for Firefox.
+
+#### Installation via ZIP (developer mode)
+
+1. Download the ZIP file from the [Releases](https://github.com/heetronoft/MyTTV/releases) or clone the repository.
+2. Unzip the archive.
+3. Open `chrome://extensions` in Chrome.
+4. Enable developer mode (top right corner).
+5. Click "Load unpacked" and select the unzipped folder.
+
+#### Installation via CRX
+
+1. Download the `.crx` file from the [Releases](https://github.com/heetronoft/MyTTV/releases).
+2. (Chromium only) Drag and drop the `.crx` file into the `chrome://extensions` page (developer mode enabled).
+3. (On Chrome, CRX installation is restricted, prefer the ZIP method above.)
+
+### Firefox (XPI)
+
+The `.xpi` file will also be available in the [Releases](https://github.com/heetronoft/MyTTV/releases) section once published.
+
+1. Download the `.xpi` file from the [Releases](https://github.com/heetronoft/MyTTV/releases) or create it manually (see below).
+2. Open `about:debugging#/runtime/this-firefox` in Firefox.
+3. Click "Load Temporary Add-on" and select the `.xpi` file.
+4. For permanent installation, publish the extension on the Firefox Add-ons website (AMO).
+
 ### From source (development)
 
 1. Clone this repository:
@@ -48,10 +78,6 @@
 2. Open `chrome://extensions` (or `about:debugging` on Firefox).
 3. Enable developer mode.
 4. Click "Load unpacked extension" and select the project folder.
-
-### From a package (coming soon)
-
-- A zip package will be provided for quick installation.
 
 ## Usage
 
