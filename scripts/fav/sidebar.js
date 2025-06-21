@@ -289,6 +289,8 @@ window.renderSidebarFavoritesList = async function (
   list.innerHTML = users.map(renderUser).join("");
 };
 
+// Optimisation : factorisation des observers et des updates
+
 function updateSidebarFavorites(forceRefresh = true) {
   const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
   const block = document.getElementById("myttv-sidebar-favs");
@@ -303,14 +305,14 @@ function updateSidebarFavorites(forceRefresh = true) {
   });
 }
 
-window.addSidebarFavorite = async function (name) {
+window.addSidebarFavorite = function (name) {
   if (typeof window.addFavorite === "function") {
-    window.addFavorite(name, updateSidebarFavorites);
+    window.addFavorite(name, () => updateSidebarFavorites(true));
   }
 };
 
-window.removeSidebarFavorite = async function (name) {
+window.removeSidebarFavorite = function (name) {
   if (typeof window.removeFavorite === "function") {
-    window.removeFavorite(name, updateSidebarFavorites);
+    window.removeFavorite(name, () => updateSidebarFavorites(true));
   }
 };
