@@ -6,6 +6,7 @@
 
 - [MyTTV](#myttv)
   - [Table of Contents](#table-of-contents)
+  - [TODO](#todo)
   - [Features](#features)
   - [Installation](#installation)
     - [Chrome (ZIP or CRX)](#chrome-zip-or-crx)
@@ -24,6 +25,26 @@
   - [FAQ](#faq)
   - [License](#license)
   - [Author \& Contact](#author--contact)
+
+## TODO
+
+- [x] Gestion avancée des favoris (ajout/retrait rapide, tri, avatars, cache)
+- [x] Affichage des favoris dans la sidebar Twitch (statut live, viewers, jeu, avatars)
+- [x] Rafraîchissement automatique des infos (5 min)
+- [x] Export/Import des favoris, avatars et options
+- [x] Option VOD-Sub (bypass VOD sub-only/geo)
+- [x] Interface de paramètres accessible via la navbar
+- [x] Support multi-langue (FR/EN)
+- [x] Compatibilité multi-navigateurs (Chrome, Firefox)
+- [x] Bouton favoris sur la page chaîne et dans la recherche
+- [x] Gestion du cache d’avatars
+- [x] Réorganisation dynamique de la sidebar selon la présence des stories
+- [x] Navigation directe vers la chaîne depuis la popup settings (clic sur avatar/nom)
+- [ ] Ajouter d’autres options de personnalisation (UI, notifications, etc.)
+- [ ] Améliorer la gestion des erreurs réseau (avatars, viewers, etc.)
+- [ ] Ajouter plus de langues
+- [ ] Optimiser les performances sur de très grandes listes de favoris
+- [ ] Intégration avec d’autres outils Twitch (à définir)
 
 ## Features
 
