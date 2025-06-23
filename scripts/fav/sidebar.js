@@ -19,6 +19,10 @@ window.injectSidebarFavorites = function () {
   const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
   if (!sidebar) return setTimeout(window.injectSidebarFavorites, 1000);
 
+  // Chercher la section stories si elle existe
+  const storiesDiv = document.querySelector(
+    ".Layout-sc-1xcs6mc-0.iGMbNn.storiesLeftNavSection--csO9S"
+  );
   // Find the title block to insert after
   const titleDiv = document.querySelector(
     ".Layout-sc-1xcs6mc-0.bCIucA.side-nav__title"
@@ -49,7 +53,10 @@ window.injectSidebarFavorites = function () {
     if (text && svg) svg.style.color = getComputedStyle(text).color;
   }, 0);
 
-  if (titleDiv && titleDiv.parentNode) {
+  if (storiesDiv && storiesDiv.parentNode) {
+    // Insérer juste après la section stories
+    storiesDiv.parentNode.insertBefore(block, storiesDiv.nextSibling);
+  } else if (titleDiv && titleDiv.parentNode) {
     // Insert just after the title div
     titleDiv.parentNode.insertBefore(block, titleDiv.nextSibling);
   } else if (sidebar.children.length >= 2) {
@@ -99,7 +106,7 @@ window.injectSidebarFavorites = function () {
   window.myttvSidebarResizeObs = new ResizeObserver(updateIconVisibility);
   window.myttvSidebarResizeObs.observe(sidebar);
 
-  // Observer pour replacer la liste si la sidebar change de taille ou si le titre est recréé
+  // Observer pour replacer la liste si la sidebar change de taille ou si le titre ou les stories sont recréés
   function observeTitleDiv() {
     const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
     const block = document.getElementById("myttv-sidebar-favs");
@@ -107,12 +114,21 @@ window.injectSidebarFavorites = function () {
     const config = { childList: true, subtree: true };
     if (window.myttvSidebarTitleObs) window.myttvSidebarTitleObs.disconnect();
     window.myttvSidebarTitleObs = new MutationObserver(() => {
+      const storiesDiv = document.querySelector(
+        ".Layout-sc-1xcs6mc-0.iGMbNn.storiesLeftNavSection--csO9S"
+      );
       const titleDiv = document.querySelector(
         ".Layout-sc-1xcs6mc-0.bCIucA.side-nav__title"
       );
-      if (titleDiv && block.previousSibling !== titleDiv) {
-        // Replace block just after the titleDiv
-        titleDiv.parentNode.insertBefore(block, titleDiv.nextSibling);
+      if (storiesDiv) {
+        // Ne déplacer que si ce n'est pas déjà le cas
+        if (block.previousSibling !== storiesDiv) {
+          storiesDiv.parentNode.insertBefore(block, storiesDiv.nextSibling);
+        }
+      } else if (titleDiv) {
+        if (block.previousSibling !== titleDiv) {
+          titleDiv.parentNode.insertBefore(block, titleDiv.nextSibling);
+        }
       }
     });
     window.myttvSidebarTitleObs.observe(sidebar, config);
