@@ -191,7 +191,7 @@ window.openMyTTVSettingsPopup = function () {
                 : "https://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_70x70.png";
             return `
                 <li>
-                  <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" class="myttv-fav-popup-user" data-name="${name}">
                     <img src="${avatar}" alt="avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;background:#23232b;" class="myttv-text-noselect">
                     <span style="font-weight:bold; text-transform:uppercase;">${name}</span>
                   </div>
@@ -200,6 +200,15 @@ window.openMyTTVSettingsPopup = function () {
               `;
           })
           .join("");
+        // Ajout du clic sur l'image ou le nom pour ouvrir la chaîne
+        favsList.querySelectorAll(".myttv-fav-popup-user").forEach((el) => {
+          el.onclick = function (e) {
+            const name = el.getAttribute("data-name");
+            // Fermer la popup puis naviguer
+            document.getElementById("myttv-settings-popup")?.remove();
+            window.location.href = "/" + name;
+          };
+        });
         favsList.querySelectorAll(".myttv-remove-fav").forEach((btn) => {
           btn.onclick = function () {
             const name = btn.getAttribute("data-name");
