@@ -5,15 +5,15 @@ function createFavButton(isFav) {
   btn.id = "myttv-fav-btn";
   btn.title = isFav ? "Retirer des favoris" : "Ajouter aux favoris";
   Object.assign(btn.style, {
-    width: "40px",
-    height: "30px",
+    width: "44px",
+    height: "32px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     background: isFav ? "#9147ff" : "#2F2F36",
     color: "#fff",
     border: "none",
-    borderRadius: "4px",
+    borderRadius: "9999px",
     cursor: "pointer",
     zIndex: 1000,
     marginLeft: "10px",
@@ -69,7 +69,7 @@ window.injectFavButton = function (retry = 0) {
   // Attendre que le bouton cible soit présent
   function tryInject(localRetry = retry) {
     if (myttvFavBtnInjected || document.getElementById("myttv-fav-btn")) return;
-    const coreBtn = document.querySelector(".ScCoreButton-sc-ocjdkq-0.jHHCzn");
+    const coreBtn = document.querySelector(".InjectLayout-sc-1i43xsx-0.kCBkGE");
     if (!coreBtn) {
       if (localRetry < 20) setTimeout(() => tryInject(localRetry + 1), 200);
       return;

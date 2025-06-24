@@ -153,10 +153,13 @@ window.injectGlobalStyles = function () {
           align-items: center;
           justify-content: center;
           padding: 0 8px;
-          border-radius: 0.4rem;
+          border-radius: 9999px;
           background: #26262b;
-          min-width: 24px;
-          height: 24px;
+          min-width: 20px;
+          height: 20px;
+          font-size: 12px;
+          color: #adadb8;
+          font-weight: 600;
         }
         .myttv-settings-list-title {
           display: flex;
@@ -164,12 +167,6 @@ window.injectGlobalStyles = function () {
           justify-content: space-between;
           flex-direction: row;
           width: 100%;
-        }
-        .myttv-remove-fav {
-          background: none;
-          cursor: pointer;
-          width: 30px;
-          height: 30px;
         }
         .myttv-settings-favs-list li {
           display: flex;
@@ -191,7 +188,9 @@ window.injectGlobalStyles = function () {
           -moz-user-select: none;
           -ms-user-select: none;
         }
-        .myttv-remove-fav {
+          .myttv-remove-fav {
+          width: 30px !important;
+          height: 30px !important;
           display: inline-flex;
           position: relative;
           -webkit-box-align: center;
@@ -206,9 +205,8 @@ window.injectGlobalStyles = function () {
           font-weight: var(--font-weight-semibold);
           font-size: var(--button-text-default);
           height: var(--button-size-default);
-          border-radius: var(--input-border-radius-default);
+          border-radius: 9999px;
           background: none; !important;
-          cursor: pointer;
         }
         .myttv-remove-fav:hover {
           background:rgba(83, 83, 95, 0.32); !important;

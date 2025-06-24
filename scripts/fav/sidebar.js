@@ -25,7 +25,7 @@ window.injectSidebarFavorites = function () {
   );
   // Find the title block to insert after
   const titleDiv = document.querySelector(
-    ".Layout-sc-1xcs6mc-0.bCIucA.side-nav__title"
+    ".Layout-sc-1xcs6mc-0.dTSUNJ.side-nav__title"
   );
   const block = document.createElement("div");
   block.id = "myttv-sidebar-favs";
@@ -40,9 +40,9 @@ window.injectSidebarFavorites = function () {
           </div>
         </div>
       </div>
-      <span style="margin-left:-5px;" class="gLNOIm" id="myttv-fav-title-text">${
+      <h3 style="margin-left:-5px;" class="CoreText-sc-1txzju1-0 dzXkjr" id="myttv-fav-title-text">${
         t.favorites
-      }</span>
+      }</h3>
     </div>
     <div id="myttv-favs-list"></div>
   `;
@@ -118,7 +118,7 @@ window.injectSidebarFavorites = function () {
         ".Layout-sc-1xcs6mc-0.iGMbNn.storiesLeftNavSection--csO9S"
       );
       const titleDiv = document.querySelector(
-        ".Layout-sc-1xcs6mc-0.bCIucA.side-nav__title"
+        ".Layout-sc-1xcs6mc-0.dTSUNJ.side-nav__title"
       );
       if (storiesDiv) {
         // Ne déplacer que si ce n'est pas déjà le cas
@@ -245,7 +245,7 @@ window.renderSidebarFavoritesList = async function (
       <div>
         <div class="Layout-sc-1xcs6mc-0 AoXTY side-nav-card">
           <a aria-haspopup="dialog" class="ScCoreLink-sc-16kq0mq-0 fytYW InjectLayout-sc-1i43xsx-0 ${
-            sidebarWidth <= 55 ? "eTNPYC" : "fxorZp side-nav-card__link"
+            sidebarWidth <= 55 ? "iCYICY" : "cnzybN side-nav-card__link"
           } tw-link" href="/${user.name}">
             <div class="Layout-sc-1xcs6mc-0 kErOMx side-nav-card__avatar">
               <div class="ScAvatar-sc-144b42z-0 dLsNfm tw-avatar">
@@ -259,19 +259,19 @@ window.renderSidebarFavoritesList = async function (
             ${
               sidebarWidth > 55
                 ? `
-            <div class="Layout-sc-1xcs6mc-0 BkJwo">
+            <div class="Layout-sc-1xcs6mc-0 bLlihH">
               <div class="Layout-sc-1xcs6mc-0 dJfBsr">
                 <div data-a-target="side-nav-card-metadata" class="Layout-sc-1xcs6mc-0 ffUuNa">
                   <div class="Layout-sc-1xcs6mc-0 kvrzxX side-nav-card__title">
-                    <p style="text-transform: uppercase;" title="${
+                    <p style="margin-top: 2px; text-transform: uppercase;" title="${
                       user.name
-                    }" data-a-target="side-nav-title" class="CoreText-sc-1txzju1-0 deIppZ InjectLayout-sc-1i43xsx-0 hnBAak">${
+                    }" data-a-target="side-nav-title" class="CoreText-sc-1txzju1-0 kdjzho InjectLayout-sc-1i43xsx-0 hnBAak">${
                     user.name
                   }</p>
                   </div>
                   ${
                     user.isLive && user.game
-                      ? `<div class=\"Layout-sc-1xcs6mc-0 hZXGWn side-nav-card__metadata\" data-a-target=\"side-nav-game-title\"><p title=\"${user.game}\" class=\"CoreText-sc-1txzju1-0 dHeetw\">${user.game}</p></div>`
+                      ? `<div class=\"Layout-sc-1xcs6mc-0 dWQoKW side-nav-card__metadata\" data-a-target=\"side-nav-game-title\"><p title=\"${user.game}\" class=\"CoreText-sc-1txzju1-0 lesgXA\">${user.game}</p></div>`
                       : ""
                   }
                 </div>
@@ -284,8 +284,8 @@ window.renderSidebarFavoritesList = async function (
                   <p class=\"CoreText-sc-1txzju1-0 InjectLayout-sc-1i43xsx-0 cdydzE\">${
                     user.isLive ? t.live : t.offline
                   }</p>
-                  <div class=\"Layout-sc-1xcs6mc-0 lnazSn\">
-                    <span aria-hidden=\"true\" class=\"CoreText-sc-1txzju1-0 kyIlCg\">${
+                  <div class=\"Layout-sc-1xcs6mc-0 dqfEBK\">
+                    <span aria-hidden=\"true\" class=\"CoreText-sc-1txzju1-0 fYAAA-D\">${
                       user.isLive ? user.viewers : ""
                     }</span>
                     <p class=\"CoreText-sc-1txzju1-0 InjectLayout-sc-1i43xsx-0 cdydzE\">${

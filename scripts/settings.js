@@ -110,7 +110,7 @@ window.openMyTTVSettingsPopup = function () {
           t.refreshAvatars
         }</span>
         <div class="myttv-settings-refresh myttv-settings-row">
-          <button id="myttv-refresh-avatars" class="myttv-settings-button kEIAKL myttv-icon-settings myttv-text-noselect">${
+          <button id="myttv-refresh-avatars" class="myttv-settings-button gGttfb myttv-icon-settings myttv-text-noselect">${
             window.refreshSVG
           } ${t.update}</button>
         </div>
@@ -120,10 +120,10 @@ window.openMyTTVSettingsPopup = function () {
           t.backup
         }</span>
         <div class="myttv-settings-export-import myttv-settings-row">
-          <button id="myttv-export-settings" class="myttv-settings-button kEIAKL myttv-icon-settings myttv-text-noselect">${window.downloadSVG(
+          <button id="myttv-export-settings" class="myttv-settings-button gGttfb myttv-icon-settings myttv-text-noselect">${window.downloadSVG(
             true
           )} ${t.export}</button>
-          <div class="myttv-settings-button kEIAKL">
+          <div class="myttv-settings-button gGttfb">
             <label class="myttv-icon-settings myttv-text-noselect" for="myttv-import-settings">${window.uploadSVG(
               true
             )} ${
@@ -352,7 +352,7 @@ window.injectNavbarSettingsButton = function (retry = 0) {
   }
   const oldBtn = document.getElementById("myttv-navbar-btn");
   if (oldBtn) oldBtn.remove();
-  const refBtn = navbar.querySelector(".Layout-sc-1xcs6mc-0.eaYOCu");
+  const refBtn = navbar.querySelector(".Layout-sc-1xcs6mc-0.hdaUxc");
   if (!refBtn) {
     if (retry < 5) {
       setTimeout(() => window.injectNavbarSettingsButton(retry + 1), 500);
@@ -368,7 +368,7 @@ window.injectNavbarSettingsButton = function (retry = 0) {
   // Utilisation dynamique du SVG depuis window.settingsSVG
   const svg = window.settingsSVG;
   wrapper.innerHTML = `
-      <button id="myttv-navbar-settings-btn" style="background: transparent; border: none; cursor: pointer; padding: 5px; margin: 5px; display: flex; align-items: center; border-radius: 4px;">
+      <button id="myttv-navbar-settings-btn" style="background: transparent; border: none; cursor: pointer; padding: 6px; margin: 4px; display: flex; align-items: center; border-radius: 9999px;">
         ${svg}
       </button>
   `;
@@ -383,7 +383,7 @@ window.injectNavbarSettingsButton = function (retry = 0) {
   btn.onmouseleave = function () {
     btn.style.background = "transparent";
   };
-  const beforeElem = navbar.querySelector(".Layout-sc-1xcs6mc-0.joVFfs");
+  const beforeElem = navbar.querySelector(".Layout-sc-1xcs6mc-0.hdaUxc");
   if (beforeElem) {
     navbar.insertBefore(wrapper, beforeElem);
   } else {
