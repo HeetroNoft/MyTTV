@@ -4,6 +4,7 @@ function createFavButton(isFav) {
   const btn = document.createElement("button");
   btn.id = "myttv-fav-btn";
   btn.title = isFav ? "Retirer des favoris" : "Ajouter aux favoris";
+  if (isFav) btn.classList.add("isFav");
   Object.assign(btn.style, {
     width: "44px",
     height: "32px",
@@ -19,9 +20,25 @@ function createFavButton(isFav) {
     marginLeft: "10px",
     marginRight: "0px",
   });
-  btn.innerHTML = window.starSVG
-    ? window.starSVG(isFav)
-    : window.starSVG(isFav);
+  // Affichage initial : rempli si favori, vide sinon
+  btn.innerHTML = window.starSVG(isFav);
+
+  btn.addEventListener("mouseenter", function () {
+    // Si favori, hover = vide. Sinon, hover = rempli
+    if (btn.classList.contains("isFav")) {
+      btn.innerHTML = window.starSVG(false);
+    } else {
+      btn.innerHTML = window.starSVG(true);
+    }
+  });
+  btn.addEventListener("mouseleave", function () {
+    // Retour à l'état initial
+    if (btn.classList.contains("isFav")) {
+      btn.innerHTML = window.starSVG(true);
+    } else {
+      btn.innerHTML = window.starSVG(false);
+    }
+  });
   return btn;
 }
 
@@ -37,16 +54,26 @@ function handleFavButtonClick(btn, channel) {
   window.isFavorite(channel, (isFav) => {
     if (isFav) {
       window.removeFromFavorites(channel, () => {
+        btn.classList.remove("isFav");
         btn.style.background = "#2F2F36";
         btn.innerHTML = window.starSVG(false);
+        // Forcer l'état visuel selon le hover après le click
+        if (btn.matches(":hover")) {
+          btn.innerHTML = window.starSVG(true);
+        }
         const block = document.getElementById("myttv-sidebar-favs");
         if (block && typeof window.removeSidebarFavorite === "function")
           window.removeSidebarFavorite(channel);
       });
     } else {
       window.addToFavorites(channel, () => {
+        btn.classList.add("isFav");
         btn.style.background = "#9147ff";
         btn.innerHTML = window.starSVG(true);
+        // Forcer l'état visuel selon le hover après le click
+        if (btn.matches(":hover")) {
+          btn.innerHTML = window.starSVG(false);
+        }
         const block = document.getElementById("myttv-sidebar-favs");
         if (block && typeof window.addSidebarFavorite === "function")
           window.addSidebarFavorite(channel);
@@ -69,7 +96,7 @@ window.injectFavButton = function (retry = 0) {
   // Attendre que le bouton cible soit présent
   function tryInject(localRetry = retry) {
     if (myttvFavBtnInjected || document.getElementById("myttv-fav-btn")) return;
-    const coreBtn = document.querySelector(".InjectLayout-sc-1i43xsx-0.kCBkGE");
+    const coreBtn = document.querySelector(".Layout-sc-1xcs6mc-0.hSUuOs");
     if (!coreBtn) {
       if (localRetry < 20) setTimeout(() => tryInject(localRetry + 1), 200);
       return;
@@ -114,6 +141,7 @@ window.injectFavButtonOnSearch = function () {
     window.isFavorite(channel, (isFav) => {
       const iglnDiv = result.querySelector(".Layout-sc-1xcs6mc-0.iglnKI");
       const btn = createFavButton(isFav);
+      btn.classList.add("onSearch");
       btn.setAttribute("data-channel", channel);
       btn.onclick = () => handleFavButtonClick(btn, channel);
       if (iglnDiv) iglnDiv.appendChild(btn);
@@ -151,5 +179,20 @@ if (typeof window !== "undefined") {
         window.injectFavButtonOnSearch();
       }
     }
+
+    // --- Ajout du check pour le bouton follow ---
+    const coreBtn = document.querySelector(".ScCoreButton-sc-ocjdkq-0.gxYeIp");
+    const injectDiv = document.querySelector(
+      ".InjectLayout-sc-1i43xsx-0.kCBkGE"
+    );
+    const favBtn = document.getElementById("myttv-fav-btn");
+    if (!coreBtn) {
+      if (injectDiv) injectDiv.classList.add("isFollow");
+      if (favBtn) favBtn.classList.add("isFollow");
+    } else {
+      if (injectDiv) injectDiv.classList.remove("isFollow");
+      if (favBtn) favBtn.classList.remove("isFollow");
+    }
+    // --- Fin du check ---
   }, 700);
 }

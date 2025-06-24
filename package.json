@@ -1,7 +1,7 @@
 {
   "name": "myttv",
-  "version": "0.2.5",
-  "description": "",
+  "version": "0.2.6",
+  "description": "Ajoute une liste de chaînes Twitch favorites dans la sidebar.",
   "main": "index.js",
   "scripts": {
     "dist": "mkdir dist",

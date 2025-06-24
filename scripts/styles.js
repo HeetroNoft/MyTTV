@@ -235,6 +235,29 @@ window.injectGlobalStyles = function () {
           background: rgba(83, 83, 95, 0.78);
         }
 
+        #myttv-fav-btn:not(.isFollow, .onSearch) {
+          transform: translateX(-52px);
+        }
+
+        #myttv-fav-btn svg {
+          transition: transform 0.2s ease-in;
+        }
+
+        #myttv-fav-btn:hover svg {
+          transform: scale(1.2);
+        }
+
+        #myttv-fav-btn.isFav:hover {
+          background: #FFAAA8 !important;
+        }
+
+        #myttv-fav-btn.isFav:hover svg {
+          fill: #000000 !important;
+        }
+
+        .InjectLayout-sc-1i43xsx-0.kCBkGE:not(.isFollow) {
+          transform: translateX(52px);
+        }
       `;
     document.head.appendChild(style);
   }
