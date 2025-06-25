@@ -189,7 +189,7 @@ MyTTV/
 
 ## Licenses
 
-This project is distributed under the MIT license.
+This project is distributed under the Apache 2.0 license.
 
 Some portions of the code are derived from the [besuper/TwitchNoSub](https://github.com/besuper/TwitchNoSub) project, which is licensed under Apache 2.0.
 
