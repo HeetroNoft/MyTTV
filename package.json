@@ -1,8 +1,8 @@
 {
   "name": "myttv",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Open-source browser extension for Twitch: advanced favorite channel management and VOD restriction bypass tools.",
-  "main": "index.js",
+  "main": "content.js",
   "scripts": {
     "dist": "mkdir dist",
     "build:mac": "rm -rf dist && mkdir dist && VERSION=$(node -p \"require('./package.json').version\") && zip -r dist/myttv-v$VERSION.zip . -x 'node_modules/*' -x '.git/*' -x 'dist/*' -x '*.DS_Store'",
