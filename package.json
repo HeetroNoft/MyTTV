@@ -10,7 +10,7 @@
   },
   "keywords": [],
   "author": "Heet",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
     "amazon-ivs-player": "1.34.1"
   }

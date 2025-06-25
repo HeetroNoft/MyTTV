@@ -23,7 +23,7 @@
   - [Project Structure](#project-structure)
   - [Permissions](#permissions)
   - [FAQ](#faq)
-  - [License](#license)
+  - [Licenses](#licenses)
   - [Author \& Contact](#author--contact)
 
 ## TODO
@@ -187,9 +187,13 @@ MyTTV/
 
 - Fork the project, submit PRs, or open an issue on GitHub.
 
-## License
+## Licenses
 
-MIT
+This project is distributed under the MIT license.
+
+Some portions of the code are derived from the [besuper/TwitchNoSub](https://github.com/besuper/TwitchNoSub) project, which is licensed under Apache 2.0.
+
+See the LICENSE, BESUPER_LICENSE, and NOTICE files for more information.
 
 ## Author & Contact
 

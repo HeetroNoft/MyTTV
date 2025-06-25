@@ -13,3 +13,6 @@ if (localStorage.getItem("myttv_vodsub_enabled") !== "false") {
   injectScript(`scripts/vod-sub/src/${extensionType}/app.js`);
   injectScript("scripts/vod-sub/src/app.js");
 }
+// File originally part of TwitchNoSub (https://github.com/besuper/TwitchNoSub)
+// Copyright 2022 besuper
+// Modified by HeetroNoft for integration into MyTTV (https://github.com/HeetroNoft/MyTTV)
