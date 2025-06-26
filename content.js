@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         MyTTV - Mes Favoris Twitch
+// @name         MyTTV
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Gère vos chaînes Twitch favorites directement depuis la page !
-// @author       VotreNom
+// @version      0.2.7
+// @description  Open-source browser extension for Twitch: advanced favorite channel management and VOD restriction bypass tools.
+// @author       Heet
 // @match        https://www.twitch.tv/*
 // @grant        storage
 // @run-at       document-end
