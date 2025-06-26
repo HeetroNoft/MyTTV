@@ -240,7 +240,6 @@ window.injectGlobalStyles = function () {
           align-items: center;
           justify-content: space-between;
           margin-bottom: 24px;
-          background: var(--myttv-bg-color);
           color: var(--myttv-text-color);
         }
         .myttv-settings-title {
