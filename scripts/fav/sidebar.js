@@ -19,45 +19,31 @@ window.injectSidebarFavorites = function () {
         viewers: "spectateurs",
       };
   document.querySelectorAll("#myttv-sidebar-favs").forEach((el) => el.remove());
-  const sidebar = document.querySelector(
-    `.${window.MYTTV_SIDEBAR_CLASS}.${window.MYTTV_BLOCK_CLASS}`
-  );
+  const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
   if (!sidebar) return setTimeout(window.injectSidebarFavorites, 1000);
 
   // Chercher la section stories si elle existe
   const storiesDiv = document.querySelector(
-    `.${window.MYTTV_SIDEBAR_CLASS}.${window.MYTTV_SECTION_CLASS}.${window.MYTTV_STORIES_SECTION_CLASS}`
+    ".Layout-sc-1xcs6mc-0.iGMbNn.storiesLeftNavSection--csO9S"
   );
   // Find the title block to insert after
   const titleDiv = document.querySelector(
-    `.${window.MYTTV_SIDEBAR_CLASS}.${window.MYTTV_TITLE_CLASS}.${window.MYTTV_SIDE_NAV_TITLE_CLASS}`
+    ".Layout-sc-1xcs6mc-0.dTSUNJ.side-nav__title"
   );
   // Chercher la section side-nav-section cible
   const navSection = document.querySelector(
-    `.${window.MYTTV_SIDEBAR_CLASS}.${window.MYTTV_SECTION_CLASS}.${window.MYTTV_SIDE_NAV_SECTION_CLASS}`
+    ".Layout-sc-1xcs6mc-0.iGMbNn.side-nav-section"
   );
   const block = document.createElement("div");
   block.id = "myttv-sidebar-favs";
-  block.style.margin = "24px 0 8px 0";
-  block.style.padding = "0";
   block.innerHTML = `
-    <div style="display:flex;align-items:center;margin-bottom:8px;margin-left:10px;gap:6px;">
-      <div class="${window.MYTTV_INJECT_LAYOUT_CLASS} ${
-    window.MYTTV_INJECT_LAYOUT_VARIANT
-  }">
-        <div class="${
-          window.MYTTV_LAYOUT_CLASS
-        } " data-a-target="side-nav-header-collapsed" role="heading" aria-level="3">
-          <div style="margin-left:5px;" class="${
-            window.MYTTV_SVG_WRAPPER_CLASS
-          } ${window.MYTTV_SVG_VARIANT} tw-svg" id="myttv-fav-title-icon">
-            ${window.sidebarStarSVG || ""}
-          </div>
+    <div id="myttv-favs-header">
+      <div id="myttv-fav-title-svg" data-a-target="side-nav-header-collapsed" role="heading" aria-level="3">
+        <div id="myttv-fav-title-icon">
+          ${window.sidebarStarSVG || ""}
         </div>
       </div>
-      <h3 style="margin-left:-5px;" class="${window.MYTTV_CORE_TEXT_CLASS} ${
-    window.MYTTV_CORE_TEXT_VARIANT
-  }" id="myttv-fav-title-text">${t.favorites}</h3>
+      <h3 id="myttv-fav-title-text">${t.favorites}</h3>
     </div>
     <div id="myttv-favs-list"></div>
   `;
@@ -72,31 +58,31 @@ window.injectSidebarFavorites = function () {
     // Insérer juste avant la section navSection
     navSection.parentNode.insertBefore(block, navSection);
     // Si le parent est side-nav-section, retirer la classe dtSdDz pour éviter le format petit
-    if (navSection.classList.contains(window.MYTTV_SIDE_NAV_SECTION_CLASS)) {
-      block.classList.remove(window.MYTTV_BLOCK_CLASS);
+    if (navSection.classList.contains("side-nav-section")) {
+      block.classList.remove("dtSdDz");
     }
   } else if (storiesDiv && storiesDiv.parentNode) {
     // Insérer juste après la section stories
     storiesDiv.parentNode.insertBefore(block, storiesDiv.nextSibling);
-    block.classList.add(window.MYTTV_BLOCK_CLASS);
+    block.classList.add("dtSdDz");
   } else if (titleDiv && titleDiv.parentNode) {
     // Insert just after the title div
     titleDiv.parentNode.insertBefore(block, titleDiv.nextSibling);
-    block.classList.add(window.MYTTV_BLOCK_CLASS);
+    block.classList.add("dtSdDz");
   } else if (sidebar.children.length >= 2) {
     sidebar.insertBefore(block, sidebar.children[2]);
-    block.classList.add(window.MYTTV_BLOCK_CLASS);
+    block.classList.add("dtSdDz");
   } else {
     sidebar.appendChild(block);
-    block.classList.add(window.MYTTV_BLOCK_CLASS);
+    block.classList.add("dtSdDz");
   }
-  block.classList.add(window.MYTTV_BLOCK_CLASS);
+  block.classList.add("dtSdDz");
 
   // Observer l'apparition de navSection si non présent
   if (!navSection) {
     const observer = new MutationObserver(() => {
       const navSectionNow = document.querySelector(
-        `.${window.MYTTV_SIDEBAR_CLASS}.${window.MYTTV_SECTION_CLASS}.${window.MYTTV_SIDE_NAV_SECTION_CLASS}`
+        ".Layout-sc-1xcs6mc-0.iGMbNn.side-nav-section"
       );
       const blockNow = document.getElementById("myttv-sidebar-favs");
       if (navSectionNow && blockNow && navSectionNow.parentNode) {
@@ -124,19 +110,23 @@ window.injectSidebarFavorites = function () {
     const width = sidebar.offsetWidth;
     icon.style.display = width <= 55 || width < 230 ? "inline" : "none";
     text.style.display = width <= 55 ? "none" : "inline";
-    window.getFavorites((favs) => {
-      window.debounce(
-        () => window.renderSidebarFavoritesList(block, favs, width),
-        0
-      );
-    });
+    // Ne recharge plus la liste des favoris lors du resize, seulement l'affichage icône/texte
+    // Ajoute/retire la classe .myttv-fav-item-collapsed selon la largeur de la sidebar
+    const items = block.querySelectorAll(".myttv-user-list-item");
+    if (items.length) {
+      if (sidebar.offsetWidth <= 55) {
+        items.forEach((el) => el.classList.add("myttv-fav-item-collapsed"));
+      } else {
+        items.forEach((el) => el.classList.remove("myttv-fav-item-collapsed"));
+      }
+    }
   }
   updateIconVisibility();
   // Appliquer la bonne marge selon la taille de la sidebar
   function updateBlockMargin() {
     if (!block || !sidebar) return;
     const width = sidebar.offsetWidth;
-    block.style.margin = width <= 55 ? "8px 0 8px 0" : "24px 0 8px 0";
+    //block.style.margin = width <= 55 ? "8px 0 8px 0" : "24px 0 8px 0";
   }
   updateBlockMargin();
   // Mettre à jour la marge aussi lors du resize
@@ -150,19 +140,17 @@ window.injectSidebarFavorites = function () {
 
   // Observer pour replacer la liste si la sidebar change de taille ou si le titre ou les stories sont recréés
   function observeTitleDiv() {
-    const sidebar = document.querySelector(
-      `.${window.MYTTV_SIDEBAR_CLASS}.${window.MYTTV_BLOCK_CLASS}`
-    );
+    const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
     const block = document.getElementById("myttv-sidebar-favs");
     if (!sidebar || !block) return;
     const config = { childList: true, subtree: true };
     if (window.myttvSidebarTitleObs) window.myttvSidebarTitleObs.disconnect();
     window.myttvSidebarTitleObs = new MutationObserver(() => {
       const storiesDiv = document.querySelector(
-        `.${window.MYTTV_SIDEBAR_CLASS}.${window.MYTTV_SECTION_CLASS}.${window.MYTTV_STORIES_SECTION_CLASS}`
+        ".Layout-sc-1xcs6mc-0.iGMbNn.storiesLeftNavSection--csO9S"
       );
       const titleDiv = document.querySelector(
-        `.${window.MYTTV_SIDEBAR_CLASS}.${window.MYTTV_TITLE_CLASS}.${window.MYTTV_SIDE_NAV_TITLE_CLASS}`
+        ".Layout-sc-1xcs6mc-0.dTSUNJ.side-nav__title"
       );
       if (storiesDiv) {
         // Ne déplacer que si ce n'est pas déjà le cas
@@ -196,14 +184,14 @@ window.injectSidebarFavorites = function () {
     if (
       parent &&
       parent.classList &&
-      parent.classList.contains(window.MYTTV_SIDE_NAV_SECTION_CLASS)
+      parent.classList.contains("side-nav-section")
     ) {
-      block.classList.remove(window.MYTTV_BLOCK_CLASS);
+      block.classList.remove("dtSdDz");
     } else {
-      block.classList.add(window.MYTTV_BLOCK_CLASS);
+      block.classList.add("dtSdDz");
     }
     // Forcer le recalcul de l'affichage (icône/texte) selon la largeur réelle de la sidebar
-    const realSidebar = block.closest(`.${window.MYTTV_SIDEBAR_CLASS}`);
+    const realSidebar = block.closest(".Layout-sc-1xcs6mc-0");
     if (realSidebar) {
       const width = realSidebar.offsetWidth;
       const icon = block.querySelector("#myttv-fav-title-icon");
@@ -212,9 +200,18 @@ window.injectSidebarFavorites = function () {
         icon.style.display = width <= 55 || width < 230 ? "inline" : "none";
         text.style.display = width <= 55 ? "none" : "inline";
       }
-      window.getFavorites((favs) => {
-        window.renderSidebarFavoritesList(block, favs, width);
-      });
+      // Ajoute/retire la classe .myttv-fav-item-collapsed selon la largeur de la sidebar
+      const items = block.querySelectorAll(".myttv-user-list-item");
+      if (items.length) {
+        if (width <= 55) {
+          items.forEach((el) => el.classList.add("myttv-fav-item-collapsed"));
+        } else {
+          items.forEach((el) =>
+            el.classList.remove("myttv-fav-item-collapsed")
+          );
+        }
+      }
+      // Ne recharge plus la liste des favoris lors du resize
     }
   }
   // Appel initial
@@ -345,110 +342,55 @@ window.renderSidebarFavoritesList = async function (
     return a.name.localeCompare(b.name);
   });
   const renderUser = (user) => `
-    <div class="${window.MYTTV_TRANSITION_CLASS} ${
-    window.MYTTV_TRANSITION_VARIANT
-  } ${
-    window.MYTTV_TW_TRANSITION
-  }" aria-hidden="false" style="transition-property: transform, opacity; transition-timing-function: ease;">
-      <div>
-        <div class="${window.MYTTV_LAYOUT_CLASS} ${
-    window.MYTTV_LAYOUT_VARIANT_CARD
-  } ${window.MYTTV_SIDE_NAV_CARD}">
-          <a aria-haspopup="dialog" class="${window.MYTTV_CORE_LINK_CLASS} ${
-    window.MYTTV_CORE_LINK_VARIANT
-  } ${window.MYTTV_INJECT_LAYOUT_CLASS}-0 ${
-    sidebarWidth <= 55
-      ? window.MYTTV_INJECT_LAYOUT_VARIANT_COLLAPSED
-      : window.MYTTV_INJECT_LAYOUT_VARIANT_LINK +
-        " " +
-        window.MYTTV_SIDE_NAV_CARD_LINK
-  } ${window.MYTTV_TW_LINK}" href="/${user.name}">
-            <div class="${window.MYTTV_LAYOUT_CLASS} ${
-    window.MYTTV_LAYOUT_VARIANT_AVATAR
-  } ${window.MYTTV_SIDE_NAV_CARD_AVATAR}">
-              <div class="${window.MYTTV_AVATAR_CLASS} ${
-    window.MYTTV_AVATAR_VARIANT
-  } ${window.MYTTV_TW_AVATAR}">
-                <img class="${window.MYTTV_INJECT_LAYOUT_CLASS}-0 fAYJcN ${
-    window.MYTTV_IMAGE_CLASS
-  } ${window.MYTTV_IMAGE_AVATAR_CLASS}${
-    user.isLive ? "" : " myttv-avatar-offline"
-  }" alt="" src="${
+    <div class="myttv-user-list-item ${
+      sidebarWidth > 55 ? `` : ` myttv-fav-item-collapsed`
+    }" aria-hidden="false">
+        <div class="myttv-fav-item">
+          <a aria-haspopup="dialog" class="myttv-user-fav-link" href="/${
+            user.name
+          }">
+            
+              <div class="myttv-fav-avatar">
+                <img class="myttv-fav-avatar-img ${
+                  user.isLive ? "" : " myttv-avatar-offline"
+                }" alt="" src="${
     user.avatar
   }" style="object-fit: cover;" onerror="this.onerror=null;this.src='https://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_70x70.png'">
               </div>
-            </div>
-            ${
-              sidebarWidth > 55
-                ? `
-            <div class="${window.MYTTV_LAYOUT_CLASS} ${
-                    window.MYTTV_LAYOUT_VARIANT_BLLIH
-                  }">
-              <div class="${window.MYTTV_LAYOUT_CLASS} ${
-                    window.MYTTV_LAYOUT_VARIANT_DJFBSR
-                  }">
-                <div data-a-target="side-nav-card-metadata" class="${
-                  window.MYTTV_LAYOUT_CLASS
-                } ${window.MYTTV_LAYOUT_VARIANT_FFUUNA}">
-                  <div class="${window.MYTTV_LAYOUT_CLASS} ${
-                    window.MYTTV_LAYOUT_VARIANT_KVRZXX
-                  } ${window.MYTTV_SIDE_NAV_CARD_TITLE}">
-                    <p style="margin-top: 2px; text-transform: uppercase;" title="${
-                      user.name
-                    }" data-a-target="side-nav-title" class="${
-                    window.MYTTV_CORE_TEXT_CLASS
-                  } ${window.MYTTV_CORE_TEXT_VARIANT_KDJZHO} ${
-                    window.MYTTV_INJECT_LAYOUT_CLASS
-                  }-0 ${window.MYTTV_INJECT_LAYOUT_VARIANT_HNBAAK}">${
-                    user.name
-                  }</p>
+              <div class="myttv-fav-info">
+                <div data-a-target="side-nav-card-metadata" class="myttv-fav-card-metadata">
+                  <div class="myttv-fav-card-title">
+                    <p title="${user.name}" data-a-target="side-nav-title">${
+    user.name
+  }</p>
                   </div>
+                  <div class="myttv-fav-game-title" data-a-target="side-nav-game-title">
                   ${
                     user.isLive && user.game
-                      ? `<div class=\"${window.MYTTV_LAYOUT_CLASS} ${window.MYTTV_LAYOUT_VARIANT_DWQOKW} ${window.MYTTV_SIDE_NAV_CARD_METADATA}\" data-a-target=\"side-nav-game-title\"><p title=\"${user.game}\" class=\"${window.MYTTV_CORE_TEXT_CLASS} ${window.MYTTV_CORE_TEXT_VARIANT_LESGXA}\">${user.game}</p></div>`
-                      : ""
+                      ? `<p title=\"${user.game}\">${user.game}</p>`
+                      : `<p title=\"${t.offline}\">${t.offline}</p>`
                   }
+                  </div>
                 </div>
-                <div class=\"${window.MYTTV_LAYOUT_CLASS} ${
-                    window.MYTTV_LAYOUT_VARIANT_JXYIBI
-                  } ${
-                    window.MYTTV_SIDE_NAV_CARD_LIVE_STATUS
-                  }\" data-a-target=\"side-nav-live-status\"><div class=\"${
-                    window.MYTTV_LAYOUT_CLASS
-                  } ${window.MYTTV_LAYOUT_VARIANT_KVRZXX}\">
+                <div class="myttv-fav-live-status" data-a-target="side-nav-live-status">
                   ${
                     user.isLive
                       ? '<div class="ScChannelStatusIndicator-sc-bjn067-0 fJwlvq tw-channel-status-indicator"></div>'
                       : ""
                   }
-                  <p class=\"${window.MYTTV_CORE_TEXT_CLASS} ${
-                    window.MYTTV_INJECT_LAYOUT_CLASS
-                  }-0 ${window.MYTTV_CORE_TEXT_VARIANT_CDYDZE}\">${
-                    user.isLive ? t.live : t.offline
-                  }</p>
-                  <div class=\"${window.MYTTV_LAYOUT_CLASS} ${
-                    window.MYTTV_LAYOUT_VARIANT_DQFEBK
-                  }\">
-                    <span aria-hidden=\"true\" class=\"${
-                      window.MYTTV_CORE_TEXT_CLASS
-                    } ${window.MYTTV_CORE_TEXT_VARIANT_FYAAAD}\">${
-                    user.isLive ? user.viewers : ""
-                  }</span>
-                    <p class=\"${window.MYTTV_CORE_TEXT_CLASS} ${
-                    window.MYTTV_INJECT_LAYOUT_CLASS
-                  }-0 ${window.MYTTV_CORE_TEXT_VARIANT_CDYDZE}\">${
-                    user.isLive ? user.viewers + " " + t.viewers : t.offline
-                  }</p>
+                  <p>${user.isLive ? t.live : t.offline}</p>
+                  <div class="myttv-fav-viewers-count">
+                    <span aria-hidden="true">${
+                      user.isLive ? user.viewers : ""
+                    }</span>
+                    <p>${
+                      user.isLive ? user.viewers + " " + t.viewers : t.offline
+                    }</p>
                   </div>
-                </div></div>
+                </div>
               </div>
-            </div>
-            `
-                : ""
-            }
           </a>
         </div>
-      </div>
     </div>`;
   list.innerHTML = users.map(renderUser).join("");
 };
@@ -456,9 +398,7 @@ window.renderSidebarFavoritesList = async function (
 // Optimisation : factorisation des observers et des updates
 
 function updateSidebarFavorites(forceRefresh = true) {
-  const sidebar = document.querySelector(
-    `.${window.MYTTV_SIDEBAR_CLASS}.${window.MYTTV_BLOCK_CLASS}`
-  );
+  const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
   const block = document.getElementById("myttv-sidebar-favs");
   if (!sidebar || !block) return;
   window.getFavorites((favs) => {

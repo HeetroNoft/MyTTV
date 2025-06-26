@@ -5,15 +5,243 @@ window.injectGlobalStyles = function () {
     const style = document.createElement("style");
     style.id = "myttv-settings-style";
     style.textContent = `
-        .myttv-avatar-offline {
-          filter: grayscale(1) !important;
-          opacity: 0.6 !important;
+        :root {
+          --myttv-bg-color: #1e1e22; /* Couleur de fond */
+          --myttv-text-color: #efeff1; /* Couleur du texte */
+          --myttv-accent-color: #9147ff; /* Couleur d'accentuation */
+          --myttv-border-color: #35353c; /* Couleur des bordures */
+          --myttv-hover-bg-color: #53535f; /* Couleur de fond au survol */
+          --myttv-button-bg-color: #26262b; /* Couleur de fond des boutons */
+          --myttv-button-hover-bg-color: #26262c; /* Couleur de fond des boutons au survol */
+          --myttv-button-text-color: #adadb8; /* Couleur du texte des boutons */
+          --myttv-text-fav-item-color: #dedee3; /* Couleur du texte des éléments favoris */
+          --myttv-button-hover-text-color: #efeff1; /* Couleur du texte des boutons au survol */
+          --myttv-fav-bg-color: #ffaaa8; /* Couleur de  fond du bouton favori */
+          --myttv-fav-text-color: #000000; /* Couleur du texte du bouton favori */
+          --myttv-fav-avatar-border-radius: 9999px; /* Bordure des avatars favoris */
+          --myttv-font-size-4: 1.4rem; /* Taille de police pour les titres */
+          --myttv-font-weight-semibold: 600; /* Poids de police pour les titres */
+          --myttv-line-height-body: 1.4; /* Hauteur de ligne pour le texte */
+          --myttv-line-height-heading: 1.1; /* Hauteur de ligne pour les titres */
         }
+
+
+        /*-------------------*/
+        /* SIDEBAR FAVORITES */
+        /*-------------------*/
+
+        #myttv-sidebar-favs {
+          padding: 0;
+          margin: 12px 0 12px 0;
+        }
+
+        /*--------------------------*/
+        /* SIDEBAR FAVORITES HEADER */
+        /*--------------------------*/
+
+        #myttv-favs-header {
+          display: flex;
+          align-items: center;
+          padding: 8px;
+          gap: 6px;
+        }
+        #myttv-fav-title-svg {
+          font-size: 1.2em;
+          font-weight: bold;
+        }
+        #myttv-fav-title-icon {
+          margin-left: 3px;
+          display:inline-flex;
+          align-items: center;
+          justify-content: center;
+          -webkit-box-align: center;
+          fill: var(--myttv-button-text-color);
+        }
+        #myttv-fav-title-icon svg {
+          width: 2rem;
+          height: 2rem;
+        }
+        #myttv-fav-title-text {
+          color: var(--myttv-text-color);
+          font-size: var(--myttv-font-size-4);
+          font-weight: var(--myttv-font-weight-semibold);
+          line-height: var(--myttv-line-height-body);
+          margin: 0 0 0 -5px !important;
+          padding: 0;
+        }
+        #myttv-favs-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+
+        /*------------------------*/
+        /* SIDEBAR FAVORITES LIST */
+        /*------------------------*/
+
+        .myttv-user-list-item {
+          display: flex;
+          align-items: center;
+          padding: 0 8px;
+          transition-property: transform, opacity;
+          transition-timing-function: ease;
+          transition-delay: 0s;
+          transition-duration: 150ms;
+          opacity: 1;
+          transform: scale(1);
+          height: 42px !important;
+          width: 100% !important;
+        }
+        .myttv-user-list-item:not(.myttv-fav-item-collapsed):hover {
+          background: var(--myttv-button-hover-bg-color);
+        }
+        .myttv-user-list-item:hover {
+          cursor: pointer;
+        }
+        .myttv-user-list-item.myttv-fav-item-collapsed {
+          margin-left: -2px !important;
+        }
+        .myttv-fav-item {
+          position: relative; !important;
+          width: 100% !important;
+        }
+        .myttv-user-fav-link {
+          height: fit-content;
+          text-decoration: none;
+          padding-inline: 0 !important;
+          padding-block: 0.5rem !important;
+          display: flex !important;
+          -webkit-box-align: center !important;
+          align-items: center !important;
+          flex-wrap: nowrap !important;
+          width: 100% !important;
+        }
+        .myttv-user-fav-link:hover {
+          text-decoration: none !important;
+          cursor: pointer !important;
+        }
+        .myttv-fav-avatar {
+          position: relative;
+          background-color: inherit;
+          width: 3rem;
+          height: 3rem;
+          max-height: 100%;
+          flex-shrink: 0 !important;
+          -webkit-box-align: center !important;
+          align-items: center !important;
+        }
+        .myttv-fav-avatar-img {
+          width: 100%;
+          height: 100%;
+          border-radius: var(--myttv-fav-avatar-border-radius);
+        }
+        .myttv-avatar-offline {
+          filter: grayscale(100%) !important;
+        }
+        .myttv-fav-item-collapsed .myttv-fav-info {
+          display: none !important;
+        }
+        .myttv-fav-info {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          margin-inline-start: 8px !important;
+          width: 100% !important;
+          display: flex !important;
+          justify-content: space-between !important;
+          flex-direction: row !important;
+          -webkit-box-pack: justify !important;
+        }
+        .myttv-fav-card-metadata {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          width: 100%;
+        }
+        .myttv-fav-card-title {
+          display: flex !important;
+          align-items: center !important;
+          -webkit-box-align: center !important;
+        }
+        .myttv-fav-card-title p {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          -webkit-box-flex: 1 !important;
+          flex-grow: 1 !important;
+          font-weight: var(--myttv-font-weight-semibold) !important;
+          font-size: var(--myttv-font-size-4) !important;
+          line-height: var(--myttv-line-height-heading) !important;
+          color: var(--myttv-text-fav-item-color) !important;
+          text-transform: capitalize;
+        }
+        .myttv-fav-game-title {
+          padding-inline-end: 4px !important;
+        }
+        .myttv-fav-game-title p {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow-x: hidden;
+          font-size: var(--myttv-font-size-4) !important;
+          color: var(--myttv-button-text-color) !important;
+          line-height: var(--myttv-line-height-body) !important;
+          text-align: -webkit-match-parent !important;
+        }
+        .myttv-fav-live-status {
+          min-width: 4rem;
+          flex-shrink: 0 !important;
+          margin-inline-start: 4px !important;
+          display: flex !important;
+          align-items: center !important;
+          -webkit-box-align: center !important;
+          height: fit-content !important;
+        }
+        .myttv-fav-live-status p {
+          width: 0.1rem;
+          height: 0.1rem;
+          border: none;
+          clip: rect(0, 0, 0, 0);
+          margin: -0.1rem;
+          overflow: hidden;
+          padding: 0;
+          position: absolute;
+          line-height: var(--myttv-line-height-body);
+          font-size: var(--myttv-font-size-4);
+        }
+        .myttv-fav-viewers-count {
+          margin-inline-start: 4px !important;
+        }
+        .myttv-fav-viewers-count span {
+          color: var(--myttv-text-fav-item-color) !important;
+          font-size: var(--myttv-font-size-4) !important;
+          line-height: var(--myttv-line-height-body) !important;
+        }
+        .myttv-fav-viewers-count p {
+          width: 0,1rem;
+          height: 0.1rem;
+          border: none;
+          clip: rect(0, 0, 0, 0);
+          margin: -0.1rem;
+          overflow: hidden;
+          padding: 0;
+          position: absolute;
+          line-height: var(--myttv-line-height-body) !important;
+        }
+
+        /*----------*/
+        /* SETTINGS */
+        /*----------*/
+
         .myttv-settings-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
           margin-bottom: 24px;
+          background: var(--myttv-bg-color);
+          color: var(--myttv-text-color);
         }
         .myttv-settings-title {
           font-size: 1.3em;
@@ -21,11 +249,12 @@ window.injectGlobalStyles = function () {
           display: flex;
           align-items: center;
           gap: 10px;
+          color: var(--myttv-text-color);
         }
         .myttv-settings-close {
           background: none;
           border: none;
-          color: #fff;
+          color: var(--myttv-text-color);
           font-size: 1.5em;
           cursor: pointer;
         }
@@ -58,7 +287,7 @@ window.injectGlobalStyles = function () {
           top: 0;
           width: 44px;
           height: 24px;
-          background: #444;
+          background: var(--myttv-border-color);
           border-radius: 12px;
           transition: background 0.2s;
         }
@@ -86,6 +315,12 @@ window.injectGlobalStyles = function () {
           justify-content: center;
           flex-direction: row;
           height: 30px;
+          background: var(--myttv-button-bg-color);
+          color: var(--myttv-button-text-color);
+        }
+        .myttv-settings-button:hover {
+          background: var(--myttv-button-hover-bg-color);
+          color: var(--myttv-button-hover-text-color);
         }
         .myttv-icon-settings {
           display: flex;
@@ -122,9 +357,9 @@ window.injectGlobalStyles = function () {
           width: 100%;
           max-height: 300px;
           overflow-y: auto;
-          background: #26262b;
+          background: var(--myttv-button-bg-color);
           border-radius: 0.4rem;
-          border: 1px solid #35353c;
+          border: 1px solid var(--myttv-border-color);
           margin: 0px;
         }
         .myttv-settings-refresh {
@@ -154,11 +389,11 @@ window.injectGlobalStyles = function () {
           justify-content: center;
           padding: 0 8px;
           border-radius: 9999px;
-          background: #26262b;
+          background: var(--myttv-button-bg-color);
           min-width: 20px;
           height: 20px;
           font-size: 12px;
-          color: #adadb8;
+          color: var(--myttv-button-text-color);
           font-weight: 600;
         }
         .myttv-settings-list-title {
@@ -209,7 +444,7 @@ window.injectGlobalStyles = function () {
           background: none; !important;
         }
         .myttv-remove-fav:hover {
-          background:rgba(83, 83, 95, 0.32); !important;
+          background: var(--myttv-hover-bg-color) !important;
           cursor: pointer;
         }
         
@@ -248,11 +483,11 @@ window.injectGlobalStyles = function () {
         }
 
         #myttv-fav-btn.isFav:hover {
-          background: #FFAAA8 !important;
+          background: var(--myttv-fav-bg-color) !important;
         }
 
         #myttv-fav-btn.isFav:hover svg {
-          fill: #000000 !important;
+          fill: var(--myttv-fav-text-color) !important;
         }
 
         .InjectLayout-sc-1i43xsx-0.kCBkGE:not(.isFollow) {
@@ -262,107 +497,3 @@ window.injectGlobalStyles = function () {
     document.head.appendChild(style);
   }
 };
-
-// === CLASSES CSS UTILISÉES DANS LE PROJET ===
-// Sidebar principale
-const MYTTV_SIDEBAR_CLASS = "Layout-sc-1xcs6mc-0"; // Conteneur principal sidebar Twitch
-const MYTTV_BLOCK_CLASS = "dtSdDz"; // Bloc custom MyTTV dans la sidebar
-const MYTTV_SECTION_CLASS = "iGMbNn"; // Section de navigation (générique)
-const MYTTV_STORIES_SECTION_CLASS = "storiesLeftNavSection--csO9S"; // Section stories Twitch
-const MYTTV_TITLE_CLASS = "dTSUNJ"; // Bloc titre de section
-const MYTTV_SIDE_NAV_SECTION_CLASS = "side-nav-section"; // Section de navigation latérale
-const MYTTV_SIDE_NAV_TITLE_CLASS = "side-nav__title"; // Titre de la navigation latérale
-
-// Header favoris (titre, étoile)
-const MYTTV_INJECT_LAYOUT_CLASS = "InjectLayout-sc-1i43xsx-0";
-const MYTTV_INJECT_LAYOUT_VARIANT = "iDMNUO";
-const MYTTV_LAYOUT_CLASS = "Layout-sc-1xcs6mc-0";
-const MYTTV_SVG_WRAPPER_CLASS = "ScSvgWrapper-sc-wkgzod-0";
-const MYTTV_SVG_VARIANT = "dKXial";
-const MYTTV_CORE_TEXT_CLASS = "CoreText-sc-1txzju1-0";
-const MYTTV_CORE_TEXT_VARIANT = "dzXkjr";
-
-// Items de la liste de favoris (cartes)
-const MYTTV_TRANSITION_CLASS = "ScTransitionBase-sc-hx4quq-0"; // Animation carte
-const MYTTV_TRANSITION_VARIANT = "jaUBmE";
-const MYTTV_TW_TRANSITION = "tw-transition";
-const MYTTV_LAYOUT_VARIANT_CARD = "AoXTY"; // Carte utilisateur
-const MYTTV_SIDE_NAV_CARD = "side-nav-card";
-const MYTTV_CORE_LINK_CLASS = "ScCoreLink-sc-16kq0mq-0"; // Lien utilisateur
-const MYTTV_CORE_LINK_VARIANT = "fytYW";
-const MYTTV_INJECT_LAYOUT_VARIANT_LINK = "cnzybN"; // Lien élargi
-const MYTTV_INJECT_LAYOUT_VARIANT_COLLAPSED = "iCYICY"; // Lien réduit (sidebar réduite)
-const MYTTV_SIDE_NAV_CARD_LINK = "side-nav-card__link";
-const MYTTV_TW_LINK = "tw-link";
-const MYTTV_LAYOUT_VARIANT_AVATAR = "kErOMx"; // Avatar utilisateur
-const MYTTV_SIDE_NAV_CARD_AVATAR = "side-nav-card__avatar";
-const MYTTV_AVATAR_CLASS = "ScAvatar-sc-144b42z-0";
-const MYTTV_AVATAR_VARIANT = "dLsNfm";
-const MYTTV_TW_AVATAR = "tw-avatar";
-const MYTTV_IMAGE_CLASS = "tw-image";
-const MYTTV_IMAGE_AVATAR_CLASS = "tw-image-avatar";
-const MYTTV_LAYOUT_VARIANT_BLLIH = "bLlihH"; // Bloc infos utilisateur
-const MYTTV_LAYOUT_VARIANT_DJFBSR = "dJfBsr";
-const MYTTV_LAYOUT_VARIANT_FFUUNA = "ffUuNa";
-const MYTTV_LAYOUT_VARIANT_KVRZXX = "kvrzxX";
-const MYTTV_SIDE_NAV_CARD_TITLE = "side-nav-card__title";
-const MYTTV_CORE_TEXT_VARIANT_KDJZHO = "kdjzho";
-const MYTTV_INJECT_LAYOUT_VARIANT_HNBAAK = "hnBAak";
-const MYTTV_LAYOUT_VARIANT_DWQOKW = "dWQoKW"; // Bloc jeu
-const MYTTV_SIDE_NAV_CARD_METADATA = "side-nav-card__metadata";
-const MYTTV_CORE_TEXT_VARIANT_LESGXA = "lesgXA";
-const MYTTV_LAYOUT_VARIANT_JXYIBI = "jxYIBi"; // Bloc live/offline
-const MYTTV_SIDE_NAV_CARD_LIVE_STATUS = "side-nav-card__live-status";
-const MYTTV_LAYOUT_VARIANT_DQFEBK = "dqfEBK"; // Bloc viewers
-const MYTTV_CORE_TEXT_VARIANT_FYAAAD = "fYAAA-D";
-const MYTTV_CORE_TEXT_VARIANT_CDYDZE = "cdydzE";
-
-// Exposition des classes pour utilisation dans le projet
-window.MYTTV_SIDEBAR_CLASS = MYTTV_SIDEBAR_CLASS;
-window.MYTTV_BLOCK_CLASS = MYTTV_BLOCK_CLASS;
-window.MYTTV_SECTION_CLASS = MYTTV_SECTION_CLASS;
-window.MYTTV_STORIES_SECTION_CLASS = MYTTV_STORIES_SECTION_CLASS;
-window.MYTTV_TITLE_CLASS = MYTTV_TITLE_CLASS;
-window.MYTTV_SIDE_NAV_SECTION_CLASS = MYTTV_SIDE_NAV_SECTION_CLASS;
-window.MYTTV_SIDE_NAV_TITLE_CLASS = MYTTV_SIDE_NAV_TITLE_CLASS;
-window.MYTTV_INJECT_LAYOUT_CLASS = MYTTV_INJECT_LAYOUT_CLASS;
-window.MYTTV_INJECT_LAYOUT_VARIANT = MYTTV_INJECT_LAYOUT_VARIANT;
-window.MYTTV_LAYOUT_CLASS = MYTTV_LAYOUT_CLASS;
-window.MYTTV_SVG_WRAPPER_CLASS = MYTTV_SVG_WRAPPER_CLASS;
-window.MYTTV_SVG_VARIANT = MYTTV_SVG_VARIANT;
-window.MYTTV_CORE_TEXT_CLASS = MYTTV_CORE_TEXT_CLASS;
-window.MYTTV_CORE_TEXT_VARIANT = MYTTV_CORE_TEXT_VARIANT;
-window.MYTTV_TRANSITION_CLASS = MYTTV_TRANSITION_CLASS;
-window.MYTTV_TRANSITION_VARIANT = MYTTV_TRANSITION_VARIANT;
-window.MYTTV_TW_TRANSITION = MYTTV_TW_TRANSITION;
-window.MYTTV_LAYOUT_VARIANT_CARD = MYTTV_LAYOUT_VARIANT_CARD;
-window.MYTTV_SIDE_NAV_CARD = MYTTV_SIDE_NAV_CARD;
-window.MYTTV_CORE_LINK_CLASS = MYTTV_CORE_LINK_CLASS;
-window.MYTTV_CORE_LINK_VARIANT = MYTTV_CORE_LINK_VARIANT;
-window.MYTTV_INJECT_LAYOUT_VARIANT_LINK = MYTTV_INJECT_LAYOUT_VARIANT_LINK;
-window.MYTTV_INJECT_LAYOUT_VARIANT_COLLAPSED =
-  MYTTV_INJECT_LAYOUT_VARIANT_COLLAPSED;
-window.MYTTV_SIDE_NAV_CARD_LINK = MYTTV_SIDE_NAV_CARD_LINK;
-window.MYTTV_TW_LINK = MYTTV_TW_LINK;
-window.MYTTV_LAYOUT_VARIANT_AVATAR = MYTTV_LAYOUT_VARIANT_AVATAR;
-window.MYTTV_SIDE_NAV_CARD_AVATAR = MYTTV_SIDE_NAV_CARD_AVATAR;
-window.MYTTV_AVATAR_CLASS = MYTTV_AVATAR_CLASS;
-window.MYTTV_AVATAR_VARIANT = MYTTV_AVATAR_VARIANT;
-window.MYTTV_TW_AVATAR = MYTTV_TW_AVATAR;
-window.MYTTV_IMAGE_CLASS = MYTTV_IMAGE_CLASS;
-window.MYTTV_IMAGE_AVATAR_CLASS = MYTTV_IMAGE_AVATAR_CLASS;
-window.MYTTV_LAYOUT_VARIANT_BLLIH = MYTTV_LAYOUT_VARIANT_BLLIH;
-window.MYTTV_LAYOUT_VARIANT_DJFBSR = MYTTV_LAYOUT_VARIANT_DJFBSR;
-window.MYTTV_LAYOUT_VARIANT_FFUUNA = MYTTV_LAYOUT_VARIANT_FFUUNA;
-window.MYTTV_LAYOUT_VARIANT_KVRZXX = MYTTV_LAYOUT_VARIANT_KVRZXX;
-window.MYTTV_SIDE_NAV_CARD_TITLE = MYTTV_SIDE_NAV_CARD_TITLE;
-window.MYTTV_CORE_TEXT_VARIANT_KDJZHO = MYTTV_CORE_TEXT_VARIANT_KDJZHO;
-window.MYTTV_INJECT_LAYOUT_VARIANT_HNBAAK = MYTTV_INJECT_LAYOUT_VARIANT_HNBAAK;
-window.MYTTV_LAYOUT_VARIANT_DWQOKW = MYTTV_LAYOUT_VARIANT_DWQOKW;
-window.MYTTV_SIDE_NAV_CARD_METADATA = MYTTV_SIDE_NAV_CARD_METADATA;
-window.MYTTV_CORE_TEXT_VARIANT_LESGXA = MYTTV_CORE_TEXT_VARIANT_LESGXA;
-window.MYTTV_LAYOUT_VARIANT_JXYIBI = MYTTV_LAYOUT_VARIANT_JXYIBI;
-window.MYTTV_SIDE_NAV_CARD_LIVE_STATUS = MYTTV_SIDE_NAV_CARD_LIVE_STATUS;
-window.MYTTV_LAYOUT_VARIANT_DQFEBK = MYTTV_LAYOUT_VARIANT_DQFEBK;
-window.MYTTV_CORE_TEXT_VARIANT_FYAAAD = MYTTV_CORE_TEXT_VARIANT_FYAAAD;
-window.MYTTV_CORE_TEXT_VARIANT_CDYDZE = MYTTV_CORE_TEXT_VARIANT_CDYDZE;
