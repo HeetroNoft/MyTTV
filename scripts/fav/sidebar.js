@@ -18,7 +18,10 @@ window.injectSidebarFavorites = function () {
         offline: "Déconnecté(e)",
         viewers: "spectateurs",
       };
-  document.querySelectorAll("#myttv-sidebar-favs").forEach((el) => el.remove());
+  // Supprime l'ancien bloc si présent
+  const oldBlock = document.getElementById("myttv-sidebar-favs");
+  if (oldBlock && oldBlock.parentNode)
+    oldBlock.parentNode.removeChild(oldBlock);
   const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
   if (!sidebar) return setTimeout(window.injectSidebarFavorites, 1000);
 
@@ -48,25 +51,22 @@ window.injectSidebarFavorites = function () {
     <div id="myttv-favs-list"></div>
   `;
 
-  setTimeout(() => {
+  // Applique la couleur du texte au SVG dès que possible
+  queueMicrotask(() => {
     const text = block.querySelector("#myttv-fav-title-text");
     const svg = block.querySelector("#myttv-fav-title-svg");
     if (text && svg) svg.style.color = getComputedStyle(text).color;
-  }, 0);
+  });
 
-  if (navSection && navSection.parentNode) {
-    // Insérer juste avant la section navSection
+  // Placement du bloc dans la sidebar
+  if (navSection?.parentNode) {
     navSection.parentNode.insertBefore(block, navSection);
-    // Si le parent est side-nav-section, retirer la classe dtSdDz pour éviter le format petit
-    if (navSection.classList.contains("side-nav-section")) {
+    if (navSection.classList.contains("side-nav-section"))
       block.classList.remove("dtSdDz");
-    }
-  } else if (storiesDiv && storiesDiv.parentNode) {
-    // Insérer juste après la section stories
+  } else if (storiesDiv?.parentNode) {
     storiesDiv.parentNode.insertBefore(block, storiesDiv.nextSibling);
     block.classList.add("dtSdDz");
-  } else if (titleDiv && titleDiv.parentNode) {
-    // Insert just after the title div
+  } else if (titleDiv?.parentNode) {
     titleDiv.parentNode.insertBefore(block, titleDiv.nextSibling);
     block.classList.add("dtSdDz");
   } else if (sidebar.children.length >= 2) {
@@ -76,16 +76,16 @@ window.injectSidebarFavorites = function () {
     sidebar.appendChild(block);
     block.classList.add("dtSdDz");
   }
-  block.classList.add("dtSdDz");
 
   // Observer l'apparition de navSection si non présent
+  // Si navSection absent, observer l'apparition pour déplacer le bloc au bon endroit
   if (!navSection) {
     const observer = new MutationObserver(() => {
       const navSectionNow = document.querySelector(
         ".Layout-sc-1xcs6mc-0.iGMbNn.side-nav-section"
       );
       const blockNow = document.getElementById("myttv-sidebar-favs");
-      if (navSectionNow && blockNow && navSectionNow.parentNode) {
+      if (navSectionNow?.parentNode && blockNow) {
         navSectionNow.parentNode.insertBefore(blockNow, navSectionNow);
         observer.disconnect();
       }
@@ -93,6 +93,7 @@ window.injectSidebarFavorites = function () {
     observer.observe(sidebar, { childList: true, subtree: true });
   }
 
+  // Affichage initial de la liste
   window.getFavorites((favs) => {
     window.renderSidebarFavoritesList(
       block,
@@ -103,149 +104,37 @@ window.injectSidebarFavorites = function () {
     );
   });
 
+  // Met à jour l'affichage icône/texte et la classe collapsed sur les favoris
   function updateIconVisibility() {
-    const icon = document.getElementById("myttv-fav-title-icon");
-    const text = document.getElementById("myttv-fav-title-text");
+    const icon = block.querySelector("#myttv-fav-title-icon");
+    const text = block.querySelector("#myttv-fav-title-text");
     if (!icon || !text || !sidebar) return;
     const width = sidebar.offsetWidth;
     icon.style.display = width <= 55 || width < 230 ? "inline" : "none";
     text.style.display = width <= 55 ? "none" : "inline";
-    // Ne recharge plus la liste des favoris lors du resize, seulement l'affichage icône/texte
-    // Ajoute/retire la classe .myttv-fav-item-collapsed selon la largeur de la sidebar
-    const items = block.querySelectorAll(".myttv-user-list-item");
-    if (items.length) {
-      if (sidebar.offsetWidth <= 55) {
-        items.forEach((el) => el.classList.add("myttv-fav-item-collapsed"));
-      } else {
-        items.forEach((el) => el.classList.remove("myttv-fav-item-collapsed"));
-      }
-    }
+    block.querySelectorAll(".myttv-user-list-item").forEach((el) => {
+      el.classList.toggle("myttv-fav-item-collapsed", width <= 55);
+    });
   }
   updateIconVisibility();
-  // Appliquer la bonne marge selon la taille de la sidebar
-  function updateBlockMargin() {
-    if (!block || !sidebar) return;
-    const width = sidebar.offsetWidth;
-    //block.style.margin = width <= 55 ? "8px 0 8px 0" : "24px 0 8px 0";
+
+  // Ajout d'un ResizeObserver pour mettre à jour dynamiquement l'affichage lors du resize de la sidebar
+  // Observer le resize de la sidebar pour adapter l'affichage
+  if (window.ResizeObserver) {
+    new ResizeObserver(updateIconVisibility).observe(sidebar);
+  } else {
+    window.addEventListener("resize", updateIconVisibility);
   }
-  updateBlockMargin();
-  // Mettre à jour la marge aussi lors du resize
-  if (window.myttvSidebarMarginObs) window.myttvSidebarMarginObs.disconnect();
-  window.myttvSidebarMarginObs = new ResizeObserver(updateBlockMargin);
-  window.myttvSidebarMarginObs.observe(sidebar);
 
-  if (window.myttvSidebarResizeObs) window.myttvSidebarResizeObs.disconnect();
-  window.myttvSidebarResizeObs = new ResizeObserver(updateIconVisibility);
-  window.myttvSidebarResizeObs.observe(sidebar);
-
-  // Observer pour replacer la liste si la sidebar change de taille ou si le titre ou les stories sont recréés
-  function observeTitleDiv() {
-    const sidebar = document.querySelector(".Layout-sc-1xcs6mc-0.dtSdDz");
-    const block = document.getElementById("myttv-sidebar-favs");
-    if (!sidebar || !block) return;
-    const config = { childList: true, subtree: true };
-    if (window.myttvSidebarTitleObs) window.myttvSidebarTitleObs.disconnect();
-    window.myttvSidebarTitleObs = new MutationObserver(() => {
-      const storiesDiv = document.querySelector(
-        ".Layout-sc-1xcs6mc-0.iGMbNn.storiesLeftNavSection--csO9S"
-      );
-      const titleDiv = document.querySelector(
-        ".Layout-sc-1xcs6mc-0.dTSUNJ.side-nav__title"
-      );
-      if (storiesDiv) {
-        // Ne déplacer que si ce n'est pas déjà le cas
-        if (block.previousSibling !== storiesDiv) {
-          storiesDiv.parentNode.insertBefore(block, storiesDiv.nextSibling);
-        }
-      } else if (titleDiv) {
-        if (block.previousSibling !== titleDiv) {
-          titleDiv.parentNode.insertBefore(block, titleDiv.nextSibling);
-        }
-      }
-    });
-    window.myttvSidebarTitleObs.observe(sidebar, config);
-  }
-  observeTitleDiv();
-
+  // Log favoris et cache au clic sur le bloc (debug)
   block.addEventListener("click", () => {
     window.getFavorites((favs) => {
       console.log("[MyTTV/Fav] Favoris:", favs);
-      if (window.getAvatarCache) {
-        window.getAvatarCache((cache) => {
-          console.log("[MyTTV/Fav] Cache des avatars:", cache);
-        });
-      }
+      window.getAvatarCache?.((cache) => {
+        console.log("[MyTTV/Fav] Cache des avatars:", cache);
+      });
     });
   });
-
-  function updateBlockClassAndIcons() {
-    // Recherche du parent réel (pour le cas où le bloc est déplacé dynamiquement)
-    const parent = block.parentElement;
-    if (
-      parent &&
-      parent.classList &&
-      parent.classList.contains("side-nav-section")
-    ) {
-      block.classList.remove("dtSdDz");
-    } else {
-      block.classList.add("dtSdDz");
-    }
-    // Forcer le recalcul de l'affichage (icône/texte) selon la largeur réelle de la sidebar
-    const realSidebar = block.closest(".Layout-sc-1xcs6mc-0");
-    if (realSidebar) {
-      const width = realSidebar.offsetWidth;
-      const icon = block.querySelector("#myttv-fav-title-icon");
-      const text = block.querySelector("#myttv-fav-title-text");
-      if (icon && text) {
-        icon.style.display = width <= 55 || width < 230 ? "inline" : "none";
-        text.style.display = width <= 55 ? "none" : "inline";
-      }
-      // Ajoute/retire la classe .myttv-fav-item-collapsed selon la largeur de la sidebar
-      const items = block.querySelectorAll(".myttv-user-list-item");
-      if (items.length) {
-        if (width <= 55) {
-          items.forEach((el) => el.classList.add("myttv-fav-item-collapsed"));
-        } else {
-          items.forEach((el) =>
-            el.classList.remove("myttv-fav-item-collapsed")
-          );
-        }
-      }
-      // Ne recharge plus la liste des favoris lors du resize
-    }
-  }
-  // Appel initial
-  updateBlockClassAndIcons();
-  // Observer le parent du bloc pour détecter un déplacement
-  if (window.myttvSidebarBlockParentObs)
-    window.myttvSidebarBlockParentObs.disconnect();
-  window.myttvSidebarBlockParentObs = new MutationObserver(
-    updateBlockClassAndIcons
-  );
-  let lastParent = block.parentElement;
-  function observeParentChange() {
-    if (lastParent) window.myttvSidebarBlockParentObs.disconnect();
-    lastParent = block.parentElement;
-    if (lastParent) {
-      window.myttvSidebarBlockParentObs.observe(lastParent, {
-        attributes: true,
-        attributeFilter: ["class"],
-        childList: true,
-        subtree: false,
-      });
-    }
-  }
-  // Observer le changement de parent du bloc
-  const parentObserver = new MutationObserver(() => {
-    observeParentChange();
-    updateBlockClassAndIcons();
-  });
-  parentObserver.observe(document.body, { childList: true, subtree: true });
-  observeParentChange();
-  // Appel aussi à chaque resize de la sidebar
-  if (window.myttvSidebarResizeObs) window.myttvSidebarResizeObs.disconnect();
-  window.myttvSidebarResizeObs = new ResizeObserver(updateBlockClassAndIcons);
-  window.myttvSidebarResizeObs.observe(sidebar);
 };
 
 window.myttvLastFavs = [];
