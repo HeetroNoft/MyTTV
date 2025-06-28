@@ -16,8 +16,7 @@ function createFavButton(isFav) {
     border: "none",
     borderRadius: "9999px",
     cursor: "pointer",
-    zIndex: 1000,
-    marginLeft: "10px",
+    marginLeft: "8px",
     marginRight: "0px",
   });
   // Affichage initial : rempli si favori, vide sinon
