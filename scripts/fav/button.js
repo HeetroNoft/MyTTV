@@ -4,21 +4,8 @@ function createFavButton(isFav) {
   const btn = document.createElement("button");
   btn.id = "myttv-fav-btn";
   btn.title = isFav ? "Retirer des favoris" : "Ajouter aux favoris";
+  btn.classList.add("myttv-fav-btn-style");
   if (isFav) btn.classList.add("isFav");
-  Object.assign(btn.style, {
-    width: "44px",
-    height: "32px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background: isFav ? "#9147ff" : "#2F2F36",
-    color: "#fff",
-    border: "none",
-    borderRadius: "9999px",
-    cursor: "pointer",
-    marginLeft: "8px",
-    marginRight: "0px",
-  });
   // Affichage initial : rempli si favori, vide sinon
   btn.innerHTML = window.starSVG(isFav);
 
@@ -38,6 +25,8 @@ function createFavButton(isFav) {
       btn.innerHTML = window.starSVG(false);
     }
   });
+  // Ajout d'une classe pour la gestion du margin
+  btn.classList.add("myttv-fav-btn-margin");
   return btn;
 }
 

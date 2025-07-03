@@ -4,7 +4,8 @@ window.injectGlobalStyles = function () {
   if (!document.getElementById("myttv-settings-style")) {
     const style = document.createElement("style");
     style.id = "myttv-settings-style";
-    style.textContent = `
+    style.textContent =
+      `
         :root {
           --myttv-bg-color: #1e1e22; /* Couleur de fond */
           --myttv-text-color: #efeff1; /* Couleur du texte */
@@ -557,6 +558,44 @@ window.injectGlobalStyles = function () {
 
         .InjectLayout-sc-1i43xsx-0.kCBkGE:not(.isFollow) {
           transform: translateX(52px);
+        }
+      ` +
+      `
+        /* ------------------------------------- */
+        /* ----------- FAVORI BUTTON ----------- */
+        /* ------------------------------------- */
+
+        .myttv-fav-btn-style {
+          width: 44px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--myttv-fav-btn-bg, #2F2F36);
+          color: #fff;
+          border: none;
+          border-radius: 9999px;
+          cursor: pointer;
+        }
+        .myttv-fav-btn-style.isFav {
+          background: var(--myttv-fav-btn-fav-bg, #9147ff);
+        }
+        .myttv-fav-btn-margin {
+          margin-left: 8px;
+          margin-right: 0px;
+        }
+
+        #myttv-fav-btn svg {
+          transition: transform 0.2s ease-in;
+        }
+        #myttv-fav-btn:hover svg {
+          transform: scale(1.2);
+        }
+        #myttv-fav-btn.isFav:hover {
+          background: var(--myttv-fav-bg-color) !important;
+        }
+        #myttv-fav-btn.isFav:hover svg {
+          fill: var(--myttv-fav-text-color) !important;
         }
       `;
     document.head.appendChild(style);
