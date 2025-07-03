@@ -13,6 +13,7 @@ window.openMyTTVSettingsPopup = function () {
         favorites: "Chaînes favorites",
         noFavorites: "Aucun favori",
         vodsub: "Permet d'afficher les VOD réservé aux abonnées\u00A0",
+        preview: "Affiche la prévisualisation du stream au survol",
         refreshAvatars: "Rafraîchir les avatars des favoris",
         update: "Mettre à jour",
         backup: "Backup",
@@ -93,9 +94,21 @@ window.openMyTTVSettingsPopup = function () {
           t.noFavorites
         }</div>
       </div>
+      <div id="myttv-settings-preview-custom-container">
+        <label class="myttv-settings-switch-label">
+          <span class="myttv-settings-switch-label-text myttv-text-noselect">${
+            t.preview
+          }</span>
+          <span class="myttv-settings-switch">
+            <input type="checkbox" id="myttv-option-preview" class="myttv-settings-switch-input" />
+            <span id="myttv-preview-switch" class="myttv-settings-switch-bar"></span>
+            <span id="myttv-preview-knob" class="myttv-settings-switch-knob"></span>
+          </span>
+        </label>
+      </div>
       <div id="myttv-settings-vod-custom-container">
         <label class="myttv-settings-switch-label">
-          <span style="width: 100%;" class="myttv-text-noselect">${
+          <span class="myttv-settings-switch-label-text myttv-text-noselect">${
             t.vodsub
           }</span>
           <span class="myttv-settings-switch">
@@ -140,6 +153,32 @@ window.openMyTTVSettingsPopup = function () {
       </span>
     </div>
   `;
+
+  // Gestion du switch Preview (toggle visuel + logique)
+  const previewSwitch = popup.querySelector("#myttv-option-preview");
+  const previewKnob = popup.querySelector("#myttv-preview-knob");
+  const previewBar = popup.querySelector("#myttv-preview-switch");
+  // Suppression de l'affichage du statut previewStatus
+  const updatePreviewUI = (checked) => {
+    previewKnob.style.left = checked ? "22px" : "2px";
+    previewBar.style.background = checked ? "#9147ff" : "#444";
+  };
+  const previewEnabled =
+    localStorage.getItem("myttv_preview_enabled") !== "false";
+  previewSwitch.checked = previewEnabled;
+  updatePreviewUI(previewEnabled);
+  previewSwitch.onchange = function () {
+    localStorage.setItem(
+      "myttv_preview_enabled",
+      previewSwitch.checked ? "true" : "false"
+    );
+    updatePreviewUI(previewSwitch.checked);
+    console.log(
+      "[MyTTV/Settings] Preview " +
+        (previewSwitch.checked ? "activé" : "désactivé")
+    );
+    setTimeout(() => location.reload(), 500);
+  };
 
   // Gestion du switch VOD-Sub (toggle visuel + logique)
   const vodSubSwitch = popup.querySelector("#myttv-option-vodsub");
@@ -273,6 +312,7 @@ window.openMyTTVSettingsPopup = function () {
           favs,
           avatars,
           vodsub: localStorage.getItem("myttv_vodsub_enabled") !== "false",
+          preview: localStorage.getItem("myttv_preview_enabled") !== "false",
         };
         const blob = new Blob([JSON.stringify(data, null, 2)], {
           type: "application/json",
@@ -323,6 +363,12 @@ window.openMyTTVSettingsPopup = function () {
           localStorage.setItem(
             "myttv_vodsub_enabled",
             data.vodsub ? "true" : "false"
+          );
+        }
+        if (typeof data.preview === "boolean") {
+          localStorage.setItem(
+            "myttv_preview_enabled",
+            data.preview ? "true" : "false"
           );
         }
         alert(t.importSuccess);

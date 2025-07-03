@@ -231,6 +231,69 @@ window.injectGlobalStyles = function () {
           line-height: var(--myttv-line-height-body) !important;
         }
 
+        /*--------------------------*/
+        /* SIDEBAR PREVIEW ON HOVER */
+        /*--------------------------*/
+
+        .myttv-fav-tooltip {
+          position: fixed;
+          z-index: 99999;
+          background: var(--myttv-bg-color);
+          color: var(--myttv-text-color);
+          border-radius: 8px;
+          box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+          padding: 0;
+          width: 320px;
+          pointer-events: none;
+          transition: opacity 0.15s;
+          opacity: 0;
+          animation: myttv-fav-tooltip-fadein 0.15s;
+        }
+        .myttv-fav-tooltip-preview {
+          width: 100%;
+          height: 180px;
+          overflow: hidden;
+          border-radius: 8px 8px 0 0;
+        }
+        .myttv-fav-tooltip-preview img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .myttv-fav-tooltip-info {
+          padding: 12px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+        }
+        .myttv-fav-tooltip-title {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          -webkit-box-flex: 1 !important;
+          flex-grow: 1 !important;
+          font-weight: var(--myttv-font-weight-semibold) !important;
+          font-size: var(--myttv-font-size-4) !important;
+          line-height: var(--myttv-line-height-heading) !important;
+          color: var(--myttv-text-fav-item-color) !important;
+          text-transform: capitalize;
+        }
+        .myttv-fav-tooltip-subtitle {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow-x: hidden;
+          font-size: var(--myttv-font-size-4) !important;
+          color: var(--myttv-button-text-color) !important;
+          line-height: var(--myttv-line-height-body) !important;
+          text-align: -webkit-match-parent !important;
+        }
+        @keyframes myttv-fav-tooltip-fadein {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: none; }
+        }
+
         /*----------*/
         /* SETTINGS */
         /*----------*/
@@ -263,6 +326,9 @@ window.injectGlobalStyles = function () {
           justify-content: space-between !important;
           width: 100%;
           cursor: pointer;
+        }
+        .myttv-settings-switch-label-text {
+          width: 100%;
         }
         .myttv-settings-switch {
           display: inline-block;

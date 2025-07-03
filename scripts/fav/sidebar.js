@@ -196,10 +196,11 @@ window.renderSidebarFavoritesList = async function (
         }
       }
       try {
-        const [liveRes, viewersRes, gameRes] = await Promise.all([
+        const [liveRes, viewersRes, gameRes, titleRes] = await Promise.all([
           fetch(`https://decapi.me/twitch/uptime/${name}`),
           fetch(`https://decapi.me/twitch/viewercount/${name}`),
           fetch(`https://decapi.me/twitch/game/${name}`),
+          fetch(`https://decapi.me/twitch/title/${name}`),
         ]);
         const uptimeText = liveRes.ok ? (await liveRes.text()).trim() : "";
         const isLive =
@@ -207,9 +208,17 @@ window.renderSidebarFavoritesList = async function (
         let viewers = viewersRes.ok ? (await viewersRes.text()).trim() : "";
         viewers = formatViewersCount(viewers);
         const game = gameRes.ok ? (await gameRes.text()).trim() : "";
-        return { name, avatar, isLive, viewers, game };
+        const title = titleRes.ok ? (await titleRes.text()).trim() : "";
+        return { name, avatar, isLive, viewers, game, title };
       } catch {
-        return { name, avatar, isLive: false, viewers: "", game: "" };
+        return {
+          name,
+          avatar,
+          isLive: false,
+          viewers: "",
+          game: "",
+          title: "",
+        };
       }
     })
   );
@@ -230,28 +239,31 @@ window.renderSidebarFavoritesList = async function (
     // Les deux offline : tri alpha
     return a.name.localeCompare(b.name);
   });
-  const renderUser = (user) => `
+  const renderUser = (user) => {
+    // Génère un id unique pour chaque favori
+    const favId = `myttv-fav-${user.name.replace(/[^a-zA-Z0-9_-]/g, "")}`;
+    return `
     <div class="myttv-user-list-item ${
       sidebarWidth > 55 ? `` : ` myttv-fav-item-collapsed`
-    }" aria-hidden="false">
+    }" aria-hidden="false" data-fav-name="${user.name}" id="${favId}">
         <div class="myttv-fav-item">
           <a aria-haspopup="dialog" class="myttv-user-fav-link" href="/${
             user.name
           }">
-            
               <div class="myttv-fav-avatar">
                 <img class="myttv-fav-avatar-img ${
                   user.isLive ? "" : " myttv-avatar-offline"
-                }" alt="" src="${
-    user.avatar
-  }" style="object-fit: cover;" onerror="this.onerror=null;this.src='https://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_70x70.png'">
+                }"
+                  alt="" src="${user.avatar}"
+                  style="object-fit: cover;"
+                  onerror="this.onerror=null;this.src='https://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_70x70.png'">
               </div>
               <div class="myttv-fav-info">
                 <div data-a-target="side-nav-card-metadata" class="myttv-fav-card-metadata">
                   <div class="myttv-fav-card-title">
                     <p title="${user.name}" data-a-target="side-nav-title">${
-    user.name
-  }</p>
+      user.name
+    }</p>
                   </div>
                   <div class="myttv-fav-game-title" data-a-target="side-nav-game-title">
                   ${
@@ -281,7 +293,87 @@ window.renderSidebarFavoritesList = async function (
           </a>
         </div>
     </div>`;
+  };
   list.innerHTML = users.map(renderUser).join("");
+
+  // TOOLTIP LOGIC: Ajout du tooltip de prévisualisation au hover d'un favori online
+  // On attend que le DOM soit mis à jour
+  setTimeout(() => {
+    // Vérifie si la prévisualisation est activée dans les settings
+    const previewEnabled = window.myttvSettings?.sidebarPreview !== false;
+    // Nettoyage d'un éventuel tooltip restant
+    document.querySelectorAll(".myttv-fav-tooltip").forEach((e) => e.remove());
+    users.forEach((user) => {
+      if (!user.isLive) return;
+      const favId = `myttv-fav-${user.name.replace(/[^a-zA-Z0-9_-]/g, "")}`;
+      const el = document.getElementById(favId);
+      if (!el) return;
+      let tooltip = null;
+      let mouseMoveHandler = null;
+      el.addEventListener("mouseenter", async (evt) => {
+        if (!previewEnabled) return;
+        // Supprime les autres tooltips
+        document
+          .querySelectorAll(".myttv-fav-tooltip")
+          .forEach((e) => e.remove());
+        // Crée le tooltip
+        tooltip = document.createElement("div");
+        tooltip.className = "myttv-fav-tooltip";
+        const enabledPreview =
+          localStorage.getItem("myttv_preview_enabled") !== "false";
+        tooltip.innerHTML = `
+          ${
+            enabledPreview
+              ? `<div class=\"myttv-fav-tooltip-preview\"><img src=\"https://static-cdn.jtvnw.net/previews-ttv/live_user_${user.name.toLowerCase()}-300x170.jpg?rand=${Date.now()}\" alt=\"preview\"></div>`
+              : ""
+          }
+          <div class=\"myttv-fav-tooltip-info\">
+            <p class=\"myttv-fav-tooltip-title\">${
+              user.isLive && user.title ? user.title : ""
+            }</p>
+            <p class=\"myttv-fav-tooltip-subtitle\">${
+              user.game ? user.game : ""
+            }</p>
+          </div>
+        `;
+        document.body.appendChild(tooltip);
+        // Positionnement dynamique à droite de l'élément
+        const rect = el.getBoundingClientRect();
+        let left = rect.right + 8;
+        let top = rect.top;
+        // Si le tooltip sort de l'écran, on ajuste
+        if (left + 320 > window.innerWidth) left = window.innerWidth - 330;
+        if (top + 180 > window.innerHeight) top = window.innerHeight - 190;
+        tooltip.style.left = left + "px";
+        tooltip.style.top = top + "px";
+        setTimeout(() => {
+          tooltip.style.opacity = "1";
+        }, 10);
+        // Pour suivre la souris (optionnel)
+        mouseMoveHandler = (moveEvt) => {
+          const rect = el.getBoundingClientRect();
+          let left = rect.right + 8;
+          let top = rect.top;
+          if (left + 320 > window.innerWidth) left = window.innerWidth - 330;
+          if (top + 180 > window.innerHeight) top = window.innerHeight - 190;
+          tooltip.style.left = left + "px";
+          tooltip.style.top = top + "px";
+        };
+        window.addEventListener("scroll", mouseMoveHandler, true);
+        window.addEventListener("resize", mouseMoveHandler, true);
+      });
+      el.addEventListener("mouseleave", () => {
+        if (tooltip) {
+          tooltip.remove();
+          tooltip = null;
+        }
+        if (mouseMoveHandler) {
+          window.removeEventListener("scroll", mouseMoveHandler, true);
+          window.removeEventListener("resize", mouseMoveHandler, true);
+        }
+      });
+    });
+  }, 0);
 };
 
 // Optimisation : factorisation des observers et des updates
