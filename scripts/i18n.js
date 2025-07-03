@@ -1,17 +1,25 @@
-// Fichier d'internationalisation pour MyTTV (français, anglais et espagnol)
-// Usage : import ou inclusion via <script> puis window.myttvI18n(lang)
+// Fichier d'internationalisation pour MyTTV
 window.myttvVersion = function () {
-  if (typeof chrome === "undefined" || !chrome.runtime) {
-    return "unknown";
-  }
-  // Récupère la version de l'extension depuis le manifeste
-  // Si la version n'est pas définie, retourne "unknown"
-  // Note : chrome.runtime.getManifest() est disponible dans les extensions Chrome
-  // et permet d'accéder aux métadonnées de l'extension.
-  // La version est définie dans le fichier manifest.json de l'extension.
-  const APP_VERSION = chrome.runtime.getManifest().version;
-  return APP_VERSION ? `v${APP_VERSION}` : "unknown";
+  // Compatible Chrome et Firefox (WebExtension API)
+  let version = "unknown";
+  try {
+    if (
+      typeof chrome !== "undefined" &&
+      chrome.runtime &&
+      chrome.runtime.getManifest
+    ) {
+      version = chrome.runtime.getManifest().version;
+    } else if (
+      typeof browser !== "undefined" &&
+      browser.runtime &&
+      browser.runtime.getManifest
+    ) {
+      version = browser.runtime.getManifest().version;
+    }
+  } catch (e) {}
+  return version ? `v${version}` : "unknown";
 };
+const FILE_EXPORT_NAME = "myttv_settings.json";
 window.myttvI18n = function (lang) {
   const dict = {
     fr: {
@@ -31,7 +39,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Import réussi ! Recharge la page pour voir les changements.",
       importFail: "Fichier invalide",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Supprimer",
       confirmRemove: "Supprimer ce favori ?",
       noFavToRefresh: "Aucun favori à rafraîchir.",
@@ -54,7 +62,7 @@ window.myttvI18n = function (lang) {
       import: "Import",
       importSuccess: "Import successful! Reload the page to see changes.",
       importFail: "Invalid file",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Remove",
       confirmRemove: "Remove this favorite?",
       noFavToRefresh: "No favorite to refresh.",
@@ -78,7 +86,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Import erfolgreich! Seite neu laden, um Änderungen zu sehen.",
       importFail: "Ungültige Datei",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Entfernen",
       confirmRemove: "Diesen Favoriten entfernen?",
       noFavToRefresh: "Kein Favorit zum Aktualisieren.",
@@ -102,7 +110,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Importazione riuscita! Ricarica la pagina per vedere le modifiche.",
       importFail: "File non valido",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Rimuovi",
       confirmRemove: "Rimuovere questo preferito?",
       noFavToRefresh: "Nessun preferito da aggiornare.",
@@ -126,7 +134,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Import geslaagd! Herlaad de pagina om wijzigingen te zien.",
       importFail: "Ongeldig bestand",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Verwijderen",
       confirmRemove: "Deze favoriet verwijderen?",
       noFavToRefresh: "Geen favoriet om te verversen.",
@@ -150,7 +158,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Import zakończony sukcesem! Odśwież stronę, aby zobaczyć zmiany.",
       importFail: "Nieprawidłowy plik",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Usuń",
       confirmRemove: "Usunąć ten ulubiony?",
       noFavToRefresh: "Brak ulubionych do odświeżenia.",
@@ -174,7 +182,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Importação bem-sucedida! Recarregue a página para ver as alterações.",
       importFail: "Arquivo inválido",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Remover",
       confirmRemove: "Remover este favorito?",
       noFavToRefresh: "Nenhum favorito para atualizar.",
@@ -198,7 +206,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Импорт успешен! Перезагрузите страницу, чтобы увидеть изменения.",
       importFail: "Неверный файл",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Удалить",
       confirmRemove: "Удалить этот избранный?",
       noFavToRefresh: "Нет избранных для обновления.",
@@ -222,7 +230,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "インポート成功！ページをリロードして変更を確認してください。",
       importFail: "無効なファイル",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "削除",
       confirmRemove: "このお気に入りを削除しますか？",
       noFavToRefresh: "更新するお気に入りがありません。",
@@ -245,7 +253,7 @@ window.myttvI18n = function (lang) {
       import: "导入",
       importSuccess: "导入成功！请重新加载页面以查看更改。",
       importFail: "无效的文件",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "移除",
       confirmRemove: "移除此收藏？",
       noFavToRefresh: "没有收藏可刷新。",
@@ -269,7 +277,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "가져오기 성공! 변경 사항을 보려면 페이지를 새로고침하세요.",
       importFail: "잘못된 파일",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "제거",
       confirmRemove: "이 즐겨찾기를 제거하시겠습니까?",
       noFavToRefresh: "새로고침할 즐겨찾기가 없습니다.",
@@ -293,7 +301,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "İçe aktarma başarılı! Değişiklikleri görmek için sayfayı yenileyin.",
       importFail: "Geçersiz dosya",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Kaldır",
       confirmRemove: "Bu favoriyi kaldırmak istiyor musunuz?",
       noFavToRefresh: "Yenilenecek favori yok.",
@@ -317,7 +325,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Import byl úspěšný! Pro zobrazení změn znovu načtěte stránku.",
       importFail: "Neplatný soubor",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Odebrat",
       confirmRemove: "Odebrat tento oblíbený?",
       noFavToRefresh: "Žádný oblíbený k obnovení.",
@@ -341,7 +349,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Επιτυχής εισαγωγή! Επαναφορτώστε τη σελίδα για να δείτε τις αλλαγές.",
       importFail: "Μη έγκυρο αρχείο",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Αφαίρεση",
       confirmRemove: "Αφαίρεση αυτού του αγαπημένου;",
       noFavToRefresh: "Κανένα αγαπημένο για ανανέωση.",
@@ -365,7 +373,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Import reușit! Reîncarcă pagina pentru a vedea modificările.",
       importFail: "Fișier invalid",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Șterge",
       confirmRemove: "Ștergi acest favorit?",
       noFavToRefresh: "Niciun favorit de reîmprospătat.",
@@ -390,7 +398,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Sikeres import! Az oldal frissítésével láthatod a változásokat.",
       importFail: "Érvénytelen fájl",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Eltávolítás",
       confirmRemove: "Eltávolítod ezt a kedvencet?",
       noFavToRefresh: "Nincs frissítendő kedvenc.",
@@ -414,7 +422,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Tuonti onnistui! Lataa sivu uudelleen nähdäksesi muutokset.",
       importFail: "Virheellinen tiedosto",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Poista",
       confirmRemove: "Poistetaanko tämä suosikki?",
       noFavToRefresh: "Ei suosikkeja päivitettäväksi.",
@@ -437,7 +445,7 @@ window.myttvI18n = function (lang) {
       import: "Importera",
       importSuccess: "Import lyckades! Ladda om sidan för att se ändringar.",
       importFail: "Ogiltig fil",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Ta bort",
       confirmRemove: "Ta bort denna favorit?",
       noFavToRefresh: "Inga favoriter att uppdatera.",
@@ -460,7 +468,7 @@ window.myttvI18n = function (lang) {
       import: "Importer",
       importSuccess: "Import lykkedes! Genindlæs siden for at se ændringer.",
       importFail: "Ugyldig fil",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Fjern",
       confirmRemove: "Fjern denne favorit?",
       noFavToRefresh: "Ingen favorit at opdatere.",
@@ -484,7 +492,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Import vellykket! Last inn siden på nytt for å se endringer.",
       importFail: "Ugyldig fil",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Fjern",
       confirmRemove: "Fjern denne favoritten?",
       noFavToRefresh: "Ingen favoritt å oppdatere.",
@@ -507,7 +515,7 @@ window.myttvI18n = function (lang) {
       import: "Importovať",
       importSuccess: "Import bol úspešný! Na zobrazenie zmien obnovte stránku.",
       importFail: "Neplatný súbor",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Odstrániť",
       confirmRemove: "Odstrániť tento obľúbený?",
       noFavToRefresh: "Žiadny obľúbený na obnovenie.",
@@ -530,7 +538,7 @@ window.myttvI18n = function (lang) {
       import: "Nhập",
       importSuccess: "Nhập thành công! Tải lại trang để xem thay đổi.",
       importFail: "Tệp không hợp lệ",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Xóa",
       confirmRemove: "Xóa kênh yêu thích này?",
       noFavToRefresh: "Không có yêu thích nào để làm mới.",
@@ -554,7 +562,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "Успешен импорт! Презаредете страницата, за да видите промените.",
       importFail: "Невалиден файл",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Премахни",
       confirmRemove: "Премахване на този любим?",
       noFavToRefresh: "Няма любими за обновяване.",
@@ -577,7 +585,7 @@ window.myttvI18n = function (lang) {
       import: "นำเข้า",
       importSuccess: "นำเข้าสำเร็จ! โหลดหน้าใหม่เพื่อดูการเปลี่ยนแปลง",
       importFail: "ไฟล์ไม่ถูกต้อง",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "ลบ",
       confirmRemove: "ลบช่องโปรดนี้?",
       noFavToRefresh: "ไม่มีช่องโปรดให้รีเฟรช",
@@ -600,7 +608,7 @@ window.myttvI18n = function (lang) {
       import: "استيراد",
       importSuccess: "تم الاستيراد بنجاح! أعد تحميل الصفحة لرؤية التغييرات.",
       importFail: "ملف غير صالح",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "إزالة",
       confirmRemove: "إزالة هذا المفضل؟",
       noFavToRefresh: "لا يوجد مفضلات للتحديث.",
@@ -624,7 +632,7 @@ window.myttvI18n = function (lang) {
       importSuccess:
         "¡Importación exitosa! Recarga la página para ver los cambios.",
       importFail: "Archivo inválido",
-      exportFile: "myttv_settings.json",
+      exportFile: FILE_EXPORT_NAME,
       remove: "Eliminar",
       confirmRemove: "¿Eliminar este favorito?",
       noFavToRefresh: "Ningún favorito para actualizar.",
