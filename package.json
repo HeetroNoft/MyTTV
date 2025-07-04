@@ -5,8 +5,8 @@
   "main": "content.js",
   "scripts": {
     "dist": "mkdir dist",
-    "build:mac": "rm -rf dist && mkdir dist && VERSION=$(node -p \"require('./package.json').version\") && zip -r dist/myttv-v$VERSION.zip . -x 'node_modules/*' -x '.git/*' -x 'dist/*' -x '*.DS_Store'",
-    "build:win": "rmdir /s /q dist && mkdir dist && powershell -NoProfile -Command \"$v=(Get-Content package.json | ConvertFrom-Json).version; New-Item -ItemType Directory -Path dist\\tempzip | Out-Null; robocopy . dist\\tempzip /E /XD node_modules dist .git /XF .DS_Store > $null; Set-Location dist; Compress-Archive -Path tempzip\\* -DestinationPath ('myttv-v' + $v + '.zip') -Force; Remove-Item -Recurse -Force tempzip\""
+    "build:mac": "rm -rf dist && mkdir dist && VERSION=$(node -p \"require('./package.json').version\") && zip -r dist/MyTTV-v$VERSION.zip . -x 'node_modules/*' -x '.git/*' -x 'dist/*' -x '*.DS_Store'",
+    "build:win": "rmdir /s /q dist && mkdir dist && powershell -NoProfile -Command \"$v=(Get-Content package.json | ConvertFrom-Json).version; New-Item -ItemType Directory -Path dist\\tempzip | Out-Null; robocopy . dist\\tempzip /E /XD node_modules dist .git /XF .DS_Store > $null; Set-Location dist; Compress-Archive -Path tempzip\\* -DestinationPath ('MyTTV-v' + $v + '.zip') -Force; Remove-Item -Recurse -Force tempzip\""
   },
   "keywords": [],
   "author": "Heet",
