@@ -37,32 +37,14 @@ window.openMyTTVSettingsPopup = function () {
   // Overlay sombre
   const overlay = document.createElement("div");
   overlay.id = "myttv-settings-popup";
-  overlay.style.position = "fixed";
-  overlay.style.top = 0;
-  overlay.style.left = 0;
-  overlay.style.width = "100vw";
-  overlay.style.height = "100vh";
-  overlay.style.background = "rgba(0,0,0,0.4)";
-  overlay.style.zIndex = 99999;
+  overlay.className = "myttv-settings-overlay";
   overlay.onclick = function (e) {
     if (e.target === overlay) overlay.remove();
   };
 
   // Contenu de la popup
   const popup = document.createElement("div");
-  popup.style.position = "absolute";
-  popup.style.top = "50%";
-  popup.style.left = "50%";
-  popup.style.transform = "translate(-50%, -50%)";
-  popup.style.background = "#18181B";
-  popup.style.color = "#fff";
-  popup.style.padding = "32px 48px 48px 48px";
-  popup.style.borderRadius = "12px";
-  popup.style.boxShadow = "0 8px 32px rgba(0,0,0,0.25)";
-  popup.style.minWidth = "500px";
-  popup.style.maxWidth = "90vw";
-  popup.style.maxHeight = "80vh";
-  popup.style.overflowY = "auto";
+  popup.className = "myttv-settings-popup";
 
   // Header avec logo
   let settingsSVG = window.settingsSVG || "";
@@ -147,9 +129,9 @@ window.openMyTTVSettingsPopup = function () {
       </div>
     </div>
     <div class="myttv-settings-footer" style="margin-top:32px; text-align:center;">
-      <span class="myttv-text-noselect" style="font-size: 12px; color: #aaa; display:block;">
+      <span class="myttv-settings-footer-info myttv-text-noselect">
         MyTTV ${window.myttvVersion()} – ${t.settings}<br>
-        <span style="font-size:11px; color:#888;">par Heet – <a href="https://github.com/heetronoft" target="_blank" style="color:#888;text-decoration:underline;">github.com/heetronoft</a></span>
+        <span class="myttv-settings-footer-link myttv-text-noselect">par Heet – <a href="https://github.com/heetronoft" target="_blank">github.com/heetronoft</a></span>
       </span>
     </div>
   `;
@@ -230,9 +212,9 @@ window.openMyTTVSettingsPopup = function () {
                 : "https://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_70x70.png";
             return `
                 <li>
-                  <div style="display:flex;align-items:center;gap:10px;cursor:pointer;" class="myttv-fav-popup-user" data-name="${name}">
-                    <img src="${avatar}" alt="avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;background:#23232b;" class="myttv-text-noselect">
-                    <span style="font-weight:bold; text-transform:uppercase;">${name}</span>
+                  <div class="myttv-fav-popup-user" data-name="${name}">
+                    <img src="${avatar}" alt="avatar" class="myttv-text-noselect myttv-fav-popup-avatar">
+                    <span class="myttv-fav-popup-name">${name}</span>
                   </div>
                   <button class='myttv-remove-fav myttv-text-noselect' data-name='${name}' title='${t.remove}'>${window.closeSVG}</button>
                 </li>
@@ -414,7 +396,7 @@ window.injectNavbarSettingsButton = function (retry = 0) {
   // Utilisation dynamique du SVG depuis window.settingsSVG
   const svg = window.settingsSVG;
   wrapper.innerHTML = `
-      <button id="myttv-navbar-settings-btn" style="background: transparent; border: none; cursor: pointer; padding: 6px; margin: 4px; display: flex; align-items: center; border-radius: 9999px;">
+      <button id="myttv-navbar-settings-btn" class="myttv-navbar-settings-btn">
         ${svg}
       </button>
   `;
@@ -423,12 +405,7 @@ window.injectNavbarSettingsButton = function (retry = 0) {
     e.stopPropagation();
     window.openMyTTVSettingsPopup && window.openMyTTVSettingsPopup();
   };
-  btn.onmouseenter = function () {
-    btn.style.background = "#2F2F36";
-  };
-  btn.onmouseleave = function () {
-    btn.style.background = "transparent";
-  };
+  // Hover géré par CSS
   const beforeElem = navbar.querySelector(".Layout-sc-1xcs6mc-0.hdaUxc");
   if (beforeElem) {
     navbar.insertBefore(wrapper, beforeElem);

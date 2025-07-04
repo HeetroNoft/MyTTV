@@ -4,41 +4,65 @@ window.injectGlobalStyles = function () {
   if (!document.getElementById("myttv-settings-style")) {
     const style = document.createElement("style");
     style.id = "myttv-settings-style";
-    style.textContent =
-      `
+    style.textContent = `
         :root {
-          --myttv-bg-color: #1e1e22; /* Couleur de fond */
-          --myttv-text-color: #efeff1; /* Couleur du texte */
-          --myttv-accent-color: #9147ff; /* Couleur d'accentuation */
-          --myttv-border-color: #35353c; /* Couleur des bordures */
-          --myttv-hover-bg-color: #53535f; /* Couleur de fond au survol */
-          --myttv-button-bg-color: #26262b; /* Couleur de fond des boutons */
-          --myttv-button-hover-bg-color: #26262c; /* Couleur de fond des boutons au survol */
-          --myttv-button-text-color: #adadb8; /* Couleur du texte des boutons */
-          --myttv-text-fav-item-color: #dedee3; /* Couleur du texte des éléments favoris */
-          --myttv-button-hover-text-color: #efeff1; /* Couleur du texte des boutons au survol */
-          --myttv-fav-bg-color: #ffaaa8; /* Couleur de  fond du bouton favori */
-          --myttv-fav-text-color: #000000; /* Couleur du texte du bouton favori */
-          --myttv-fav-avatar-border-radius: 9999px; /* Bordure des avatars favoris */
-          --myttv-font-size-4: 1.4rem; /* Taille de police pour les titres */
-          --myttv-font-weight-semibold: 600; /* Poids de police pour les titres */
-          --myttv-line-height-body: 1.4; /* Hauteur de ligne pour le texte */
-          --myttv-line-height-heading: 1.1; /* Hauteur de ligne pour les titres */
+          --myttv-fav-avatar-border-radius: 9999px;
+          --myttv-font-size-4: 1.4rem;
+          --myttv-font-weight-semibold: 600;
+          --myttv-line-height-body: 1.4;
+          --myttv-line-height-heading: 1.1;
+        }
+        :root.tw-root--theme-light {
+          --myttv-color-bg: #F7F7F8;
+          --myttv-color-surface: #EFEFF1;
+          --myttv-color-surface-hover: #E6E6EA;
+          --myttv-color-elevation: #FFFFFF;
+          --myttv-color-elevation-hover: #E2E2E6;
+          --myttv-color-border: #E2E2E6;
+          --myttv-color-text: #0E0E10;
+          --myttv-color-onAccent: #EFEFF1;
+          --myttv-color-dark: #0E0E10;
+          --myttv-color-legend: #53535F;
+          --myttv-color-placeholder: #AAAAAA;
+          --myttv-color-button: #E7E7EA;
+          --myttv-color-button-hover: #DDDDE1;
+          --myttv-color-accent: #9147ff;
+          --myttv-color-lightDanger: #ffaaa8;
+          --myttv-color-danger: #EB0200;
+          --myttv-color-darkDanger: #971411;
+        }
+        :root.tw-root--theme-dark {
+          --myttv-color-bg: #0E0E10;
+          --myttv-color-surface: #1F1F23;
+          --myttv-color-surface-hover: #26262B;
+          --myttv-color-elevation: #18181B;
+          --myttv-color-elevation-hover: #35353C;
+          --myttv-color-border: #35353C;
+          --myttv-color-text: #EFEFF1;
+          --myttv-color-onAccent: #EFEFF1;
+          --myttv-color-dark: #0E0E10;
+          --myttv-color-legend: #ADADB8;
+          --myttv-color-placeholder: #AAAAAA;
+          --myttv-color-button: #29292E;
+          --myttv-color-button-hover: #2F2F36;
+          --myttv-color-accent: #9147ff;
+          --myttv-color-lightDanger: #ffaaa8;
+          --myttv-color-danger: #EB0200;
+          --myttv-color-darkDanger: #971411;
         }
 
-
-        /*-------------------*/
-        /* SIDEBAR FAVORITES */
-        /*-------------------*/
+        /* ----------------------------------------- */
+        /* ----------- SIDEBAR FAVORITES ----------- */
+        /* ----------------------------------------- */
 
         #myttv-sidebar-favs {
           padding: 0;
           margin: 12px 0 12px 0;
         }
 
-        /*--------------------------*/
-        /* SIDEBAR FAVORITES HEADER */
-        /*--------------------------*/
+        /* ------------------------------------------------ */
+        /* ----------- SIDEBAR FAVORITES HEADER ----------- */
+        /* ------------------------------------------------ */
 
         #myttv-favs-header {
           display: flex;
@@ -56,14 +80,14 @@ window.injectGlobalStyles = function () {
           align-items: center;
           justify-content: center;
           -webkit-box-align: center;
-          fill: var(--myttv-button-text-color);
+          color: var(--myttv-color-accent);
         }
         #myttv-fav-title-icon svg {
           width: 2rem;
           height: 2rem;
         }
         #myttv-fav-title-text {
-          color: var(--myttv-text-color);
+          color: var(--myttv-color-text);
           font-size: var(--myttv-font-size-4);
           font-weight: var(--myttv-font-weight-semibold);
           line-height: var(--myttv-line-height-body);
@@ -79,9 +103,9 @@ window.injectGlobalStyles = function () {
           gap: 0;
         }
 
-        /*------------------------*/
-        /* SIDEBAR FAVORITES LIST */
-        /*------------------------*/
+        /* ---------------------------------------------- */
+        /* ----------- SIDEBAR FAVORITES LIST ----------- */
+        /* ---------------------------------------------- */
 
         .myttv-user-list-item {
           display: flex;
@@ -97,7 +121,7 @@ window.injectGlobalStyles = function () {
           width: 100% !important;
         }
         .myttv-user-list-item:not(.myttv-fav-item-collapsed):hover {
-          background: var(--myttv-button-hover-bg-color);
+          background: var(--myttv-color-button-hover);
         }
         .myttv-user-list-item:hover {
           cursor: pointer;
@@ -176,7 +200,7 @@ window.injectGlobalStyles = function () {
           font-weight: var(--myttv-font-weight-semibold) !important;
           font-size: var(--myttv-font-size-4) !important;
           line-height: var(--myttv-line-height-heading) !important;
-          color: var(--myttv-text-fav-item-color) !important;
+          color: var(--myttv-color-text) !important;
           text-transform: capitalize;
         }
         .myttv-fav-game-title {
@@ -187,7 +211,7 @@ window.injectGlobalStyles = function () {
           white-space: nowrap;
           overflow-x: hidden;
           font-size: var(--myttv-font-size-4) !important;
-          color: var(--myttv-button-text-color) !important;
+          color: var(--myttv-color-legend) !important;
           line-height: var(--myttv-line-height-body) !important;
           text-align: -webkit-match-parent !important;
         }
@@ -216,7 +240,7 @@ window.injectGlobalStyles = function () {
           margin-inline-start: 4px !important;
         }
         .myttv-fav-viewers-count span {
-          color: var(--myttv-text-fav-item-color) !important;
+          color: var(--myttv-color-text) !important;
           font-size: var(--myttv-font-size-4) !important;
           line-height: var(--myttv-line-height-body) !important;
         }
@@ -232,15 +256,15 @@ window.injectGlobalStyles = function () {
           line-height: var(--myttv-line-height-body) !important;
         }
 
-        /*--------------------------*/
-        /* SIDEBAR PREVIEW ON HOVER */
-        /*--------------------------*/
+        /* ------------------------------------------------ */
+        /* ----------- SIDEBAR PREVIEW ON HOVER ----------- */
+        /* ------------------------------------------------ */
 
         .myttv-fav-tooltip {
           position: fixed;
           z-index: 99999;
-          background: var(--myttv-bg-color);
-          color: var(--myttv-text-color);
+          background: var(--myttv-color-surface);
+          color: var(--myttv-color-text);
           border-radius: 8px;
           box-shadow: 0 2px 16px rgba(0,0,0,0.4);
           padding: 0;
@@ -278,7 +302,7 @@ window.injectGlobalStyles = function () {
           font-weight: var(--myttv-font-weight-semibold) !important;
           font-size: var(--myttv-font-size-4) !important;
           line-height: var(--myttv-line-height-heading) !important;
-          color: var(--myttv-text-fav-item-color) !important;
+          color: var(--myttv-color-text) !important;
           text-transform: capitalize;
         }
         .myttv-fav-tooltip-subtitle {
@@ -286,7 +310,7 @@ window.injectGlobalStyles = function () {
           white-space: nowrap;
           overflow-x: hidden;
           font-size: var(--myttv-font-size-4) !important;
-          color: var(--myttv-button-text-color) !important;
+          color: var(--myttv-color-legend) !important;
           line-height: var(--myttv-line-height-body) !important;
           text-align: -webkit-match-parent !important;
         }
@@ -295,16 +319,72 @@ window.injectGlobalStyles = function () {
           to { opacity: 1; transform: none; }
         }
 
-        /*----------*/
-        /* SETTINGS */
-        /*----------*/
+        /* -------------------------------- */
+        /* ----------- SETTINGS ----------- */
+        /* -------------------------------- */
+
+        .myttv-settings-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(0,0,0,0.4);
+          z-index: 99999;
+        }
+        .myttv-settings-popup {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: var(--myttv-color-surface);
+          color: var(--myttv-color-text);
+          padding: 32px 48px 48px 48px;
+          border-radius: 12px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+          min-width: 500px;
+          max-width: 90vw;
+          max-height: 80vh;
+          overflow-y: auto;
+        }
+        .myttv-fav-popup-user {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          cursor: pointer;
+        }
+        .myttv-fav-popup-avatar {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          object-fit: cover;
+          background: var(--myttv-grey-800);
+        }
+        .myttv-fav-popup-name {
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+        .myttv-navbar-settings-btn {
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          padding: 6px;
+          margin: 4px;
+          display: flex;
+          align-items: center;
+          border-radius: 9999px;
+          transition: background 0.2s;
+        }
+        .myttv-navbar-settings-btn:hover {
+          background: var(--myttv-color-elevation-hover);
+        }
 
         .myttv-settings-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
           margin-bottom: 24px;
-          color: var(--myttv-text-color);
+          color: var(--myttv-color-text);
         }
         .myttv-settings-title {
           font-size: 1.3em;
@@ -312,12 +392,12 @@ window.injectGlobalStyles = function () {
           display: flex;
           align-items: center;
           gap: 10px;
-          color: var(--myttv-text-color);
+          color: var(--myttv-color-text);
         }
         .myttv-settings-close {
           background: none;
           border: none;
-          color: var(--myttv-text-color);
+          color: var(--myttv-color-text);
           font-size: 1.5em;
           cursor: pointer;
         }
@@ -363,7 +443,7 @@ window.injectGlobalStyles = function () {
           left: 2px;
           width: 20px;
           height: 20px;
-          background: #fff;
+          background: var(--myttv-color-onAccent);
           border-radius: 50%;
           transition: left 0.2s;
         }
@@ -381,12 +461,12 @@ window.injectGlobalStyles = function () {
           justify-content: center;
           flex-direction: row;
           height: 30px;
-          background: var(--myttv-button-bg-color);
-          color: var(--myttv-button-text-color);
+          background: var(--myttv-color-button);
+          color: var(--myttv-color-accent);
         }
         .myttv-settings-button:hover {
-          background: var(--myttv-button-hover-bg-color);
-          color: var(--myttv-button-hover-text-color);
+          background: var(--myttv-color-button-hover);
+          color: var(--myttv-color-surface);
         }
         .myttv-icon-settings {
           display: flex;
@@ -423,9 +503,9 @@ window.injectGlobalStyles = function () {
           width: 100%;
           max-height: 300px;
           overflow-y: auto;
-          background: var(--myttv-button-bg-color);
+          background: var(--myttv-color-button);
           border-radius: 0.4rem;
-          border: 1px solid var(--myttv-border-color);
+          border: 1px solid var(--myttv-color-border);
           margin: 0px;
         }
         .myttv-settings-refresh {
@@ -455,11 +535,11 @@ window.injectGlobalStyles = function () {
           justify-content: center;
           padding: 0 8px;
           border-radius: 9999px;
-          background: var(--myttv-button-bg-color);
+          background: var(--myttv-color-button);
           min-width: 20px;
           height: 20px;
           font-size: 12px;
-          color: var(--myttv-button-text-color);
+          color: var(--myttv-color-legend);
           font-weight: 600;
         }
         .myttv-settings-list-title {
@@ -510,7 +590,7 @@ window.injectGlobalStyles = function () {
           background: none; !important;
         }
         .myttv-remove-fav:hover {
-          background: var(--myttv-hover-bg-color) !important;
+          background: var(--myttv-color-elevation-hover) !important;
           cursor: pointer;
         }
         
@@ -536,66 +616,83 @@ window.injectGlobalStyles = function () {
           background: rgba(83, 83, 95, 0.78);
         }
 
-        #myttv-fav-btn:not(.isFollow, .onSearch) {
-          transform: translateX(-52px);
+        .myttv-settings-footer-info {
+          font-size: 12px;
+          color: var(--myttv-color-legend); 
+          display:block;
         }
 
-        #myttv-fav-btn svg {
-          transition: transform 0.2s ease-in;
+        .myttv-settings-footer-link {
+          font-size: 12px;
+          color: var(--myttv-color-placeholder);
+          text-decoration: none;
         }
 
-        #myttv-fav-btn:hover svg {
-          transform: scale(1.2);
-        }
-
-        #myttv-fav-btn.isFav:hover {
-          background: var(--myttv-fav-bg-color) !important;
-        }
-
-        #myttv-fav-btn.isFav:hover svg {
-          fill: var(--myttv-fav-text-color) !important;
-        }
-
-        .InjectLayout-sc-1i43xsx-0.kCBkGE:not(.isFollow) {
-          transform: translateX(52px);
-        }
-      ` +
-      `
         /* ------------------------------------- */
         /* ----------- FAVORI BUTTON ----------- */
         /* ------------------------------------- */
 
-        .myttv-fav-btn-style {
-          width: 44px;
-          height: 32px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: var(--myttv-fav-btn-bg, #2F2F36);
-          color: #fff;
-          border: none;
-          border-radius: 9999px;
-          cursor: pointer;
+        #myttv-fav-btn:not(.isFollow, .onSearch) {
+          transform: translateX(-52px);
         }
-        .myttv-fav-btn-style.isFav {
-          background: var(--myttv-fav-btn-fav-bg, #9147ff);
-        }
+
         .myttv-fav-btn-margin {
           margin-left: 8px;
           margin-right: 0px;
         }
 
+        #myttv-fav-btn {
+          width: 44px;
+          height: 32px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--myttv-color-button-hover);
+          color: var(--myttv-color-accent);
+          border: none;
+          border-radius: 9999px;
+          cursor: pointer;
+          background: var(--myttv-color-button) !important;
+        }
+
+        #myttv-fav-btn:hover {
+          background: var(--myttv-color-button) !important;
+        }
+
         #myttv-fav-btn svg {
           transition: transform 0.2s ease-in;
+          color: var(--myttv-color-text) !important;
         }
+
         #myttv-fav-btn:hover svg {
           transform: scale(1.2);
+          color: var(--myttv-color-text) !important;
         }
+
+        #myttv-fav-btn.isFav {
+          background-color: var(--myttv-color-accent) !important;
+        }
+
         #myttv-fav-btn.isFav:hover {
-          background: var(--myttv-fav-bg-color) !important;
+          background: var(--myttv-color-lightDanger) !important;
         }
+
+        #myttv-fav-btn.isFav svg {
+          transition: transform 0.2s ease-in;
+          color: var(--myttv-color-onAccent) !important;
+        }
+
         #myttv-fav-btn.isFav:hover svg {
-          fill: var(--myttv-fav-text-color) !important;
+          transform: scale(1.2);
+          color: var(--myttv-color-dark) !important;
+        }
+
+        /* ---------------------------------------------- */
+        /* ----------- NOTIF BUTTON TRANSLATE ----------- */
+        /* ---------------------------------------------- */
+
+        .InjectLayout-sc-1i43xsx-0.kCBkGE:not(.isFollow) {
+          transform: translateX(52px);
         }
       `;
     document.head.appendChild(style);

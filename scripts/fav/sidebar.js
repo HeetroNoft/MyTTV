@@ -51,13 +51,6 @@ window.injectSidebarFavorites = function () {
     <div id="myttv-favs-list"></div>
   `;
 
-  // Applique la couleur du texte au SVG dès que possible
-  queueMicrotask(() => {
-    const text = block.querySelector("#myttv-fav-title-text");
-    const svg = block.querySelector("#myttv-fav-title-svg");
-    if (text && svg) svg.style.color = getComputedStyle(text).color;
-  });
-
   // Placement du bloc dans la sidebar
   if (navSection?.parentNode) {
     navSection.parentNode.insertBefore(block, navSection);
