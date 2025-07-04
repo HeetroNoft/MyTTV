@@ -201,7 +201,6 @@ window.injectGlobalStyles = function () {
           font-size: var(--myttv-font-size-4) !important;
           line-height: var(--myttv-line-height-heading) !important;
           color: var(--myttv-color-text) !important;
-          text-transform: capitalize;
         }
         .myttv-fav-game-title {
           padding-inline-end: 4px !important;
@@ -361,8 +360,15 @@ window.injectGlobalStyles = function () {
           background: var(--myttv-grey-800);
         }
         .myttv-fav-popup-name {
-          font-weight: bold;
-          text-transform: uppercase;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          -webkit-box-flex: 1 !important;
+          flex-grow: 1 !important;
+          font-weight: var(--myttv-font-weight-semibold) !important;
+          font-size: var(--myttv-font-size-4) !important;
+          line-height: var(--myttv-line-height-heading) !important;
+          color: var(--myttv-color-text) !important;
         }
         .myttv-navbar-settings-btn {
           background: transparent;
