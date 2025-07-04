@@ -1,6 +1,6 @@
 {
   "name": "myttv",
-  "version": "0.2.7",
+  "version": "0.3.0",
   "description": "Open-source browser extension for Twitch: advanced favorite channel management and VOD restriction bypass tools.",
   "main": "content.js",
   "scripts": {
