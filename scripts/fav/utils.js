@@ -1,5 +1,13 @@
 // utils.js
 window.getChannelName = function () {
+  // Essaye de récupérer le nom du streamer depuis le h1 spécifique
+  const h1 = document.querySelector(
+    "h1.CoreText-sc-1txzju1-0.ScTitleText-sc-d9mj2s-0"
+  );
+  if (h1 && h1.textContent) {
+    return h1.textContent.trim();
+  }
+  // Fallback : ancienne méthode via l'URL
   const match = window.location.pathname.match(/^\/(\w+)/);
   if (match && match[1] && !["directory", "p", "settings"].includes(match[1])) {
     return match[1];
